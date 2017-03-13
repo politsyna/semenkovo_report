@@ -1,0 +1,30 @@
+{#
+  submission
+  form
+#}
+{% set team = data.team %}
+
+<div class="header">
+  <p>Отчет за {{data.reportmonth}}
+  <h3>Учет экскурсионных часов научных сотрудников</h3>
+  <table>
+    <tr>
+      <td><strong>№</strong></td>
+      <td><strong>ФИО работника</strong></td>
+      <td><strong>Часы</strong></td>
+    </tr>
+    {% for person in team %}
+    <tr>
+      <td>{{ loop.index }}</td>
+      <td>{{ person.title }}</td>
+      <td>{{ person.chas_itogo }}</td>
+    </tr>
+    {% endfor %}
+    <tr>
+      <td> </td>
+      <td>ВСЕГО:</td>
+      <td>{{data.vsego}}</td>
+    </tr>
+  </table>
+  </p>
+</div>

@@ -1,0 +1,6 @@
+name: report
+description: 'report'
+type: module
+core: 8.x
+version: 1.1
+package: Synapse

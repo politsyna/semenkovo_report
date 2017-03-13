@@ -1,0 +1,21 @@
+report.page:
+  path: 'report'
+  defaults:
+    _controller: '\Drupal\report\Controller\Report::report'
+    _title: 'Report'
+  requirements:
+    _permission: 'access content'
+
+page_itog:
+  path: 'report/itog/{start}/{end}'
+  defaults:
+    _controller: '\Drupal\report\Controller\PageItog::report'
+  requirements:
+    _permission: 'access content'
+
+page_exp:
+  path: 'report/exp/{start}/{end}'
+  defaults:
+    _controller: '\Drupal\report\Controller\PageExp::report'
+  requirements:
+    _permission: 'access content'

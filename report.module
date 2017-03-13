@@ -1,0 +1,22 @@
+<?php
+
+/**
+ * @file
+ * report.module
+ */
+
+/**
+ * Implements hook_theme().
+ */
+function report_theme() {
+  return [
+    'report-header' => [
+      'template' => 'rep-header',
+      'variables' => ['data' => []],
+    ],
+    'report-table' => [
+      'template' => 'rep-table',
+      'variables' => ['table' => []],
+    ],
+  ];
+}
