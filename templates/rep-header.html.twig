@@ -6,6 +6,30 @@
 
 <div class="header">
   <p>Отчет за {{data.reportmonth}}
+    <h3>Учет музейных услуг</h3>
+    <table>
+      <tr>
+        <td><strong>№</strong></td>
+        <td><strong>Тип программы</strong></td>
+        <td><strong>Количество</strong></td>
+      </tr>
+      {% for programm in data.all_programm %}
+      <tr>
+        <td>{{ loop.index }}</td>
+        <td>{{ programm.name_programm }}</td>
+        <td>{{ programm.summa }}</td>
+      </tr>
+      {% endfor %}
+      <tr>
+        <td> </td>
+        <td>ВСЕГО:</td>
+        <td>{{data.vsego_programm}}</td>
+      </tr>
+      <tr>
+        <td>Посещаемость</td>
+        <td>{{data.vsego_people}}</td>
+      </tr>
+    </table>
   <h3>Учет экскурсионных часов научных сотрудников</h3>
   <table>
     <tr>
@@ -23,7 +47,7 @@
     <tr>
       <td> </td>
       <td>ВСЕГО:</td>
-      <td>{{data.vsego}}</td>
+      <td>{{data.vsego_chasov}}</td>
     </tr>
   </table>
   </p>
