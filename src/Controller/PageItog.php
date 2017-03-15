@@ -21,22 +21,35 @@ class PageItog extends ControllerBase {
     $vsego_programm = 0;
     $all_people = [];
     $vsego_people = 0;
+    $fakt_cost = [];
+    $summ_fakt_cost = 0;
+    $visitors_kateg = [];
+    $visitors_reg = [];
+    $keytoname_1 = [
+      'adult' => 'Взрослые',
+      'student' => 'Студенты',
+      'school' => 'Школьники',
+      'baby' => 'Дошкольники',
+      'old' => 'Пенсионеры',
+      'military' => 'Военнослужащие',
+      'museum' => 'Музейные',
+      'lgotniki' => 'Льготники',
+      'guest' => 'Гости',
+      'none' => 'Неизвестно',
+    ];
+    $keytoname_2 = [
+      'vologda' => 'Вологда',
+      'volobl' => 'Вологодская область',
+      'anrussia' => 'Другие регионы России',
+      'ancountry' => 'Другие страны',
+      'none' => 'Регион неизвестен',
+    ];
+    $summa_ludey = 0;
     foreach ($orders as $key => $node) {
       $fieldcollection = $node->field_orders_visitor;
       $fc = Group::collectionItems($fieldcollection);
-      $team = [];
-      foreach ($node->field_orders_team as $key => $man) {
-        $node_team = $man;
-        $node_team = $man->entity;
-        $lastname = $node_team->field_team_name_last->value;
-        $name = $node_team->field_team_name->value;
-        $middlename = $node_team->field_team_name_middle->value;
-        $team[] = [
-          'Ф работника' => $lastname,
-          'И работника' => $name,
-          'О работника' => $middlename,
-        ];
-      }
+      // Делаем из поля "ссылка на команду" массив людейж.
+      $team = $this->getOrdersTeam($node->field_orders_team);
       $node_usluga = $node->field_orders_ref_activity->entity;
       $termin = $node_usluga->field_activity_type->entity;
       $name_programm = $termin->name->value;
@@ -65,16 +78,75 @@ class PageItog extends ControllerBase {
       $all_programm[$name_programm]['summa'] = $new_summa;
       // 5. Считаем сколько всего программ проведено (= сколько циклов прошло).
       $vsego_programm = $vsego_programm + $kolvo_programm;
-      
+
+      // Считаем общий доход по всем программам: сумма всех "фактическая стоимость".
+      $id = $node->id();
+      $fakt_cost[$id] = [
+        'начислено за все услуги' => $source['фактическая стоимость услуги'],
+      ];
+      $summ_fakt_cost = $summ_fakt_cost + $fakt_cost[$id]['начислено за все услуги'];
       // Считаем посещаемость.
       $people = $source['общее количество людей'];
-      $id = $node->id();
       $all_people[$id] = [
         'количество людей' => $source['общее количество людей'],
       ];
       $vsego_people = $vsego_people + $all_people[$id]['количество людей'];
+
+      // Определяем исходные данные для расчета кол-ва посетителей в каждой категории и из каких регионов.
+      foreach ($fc as $k => $v) {
+        $kategoria = $v['kategory'];
+        $kolvo_po_kateg = $v['visitor'];
+        $region = $v['region'];
+        // Эти условия нужны на случай, если категория посетителя или его регион не определены.
+        if (!array_key_exists($kategoria, $keytoname_1)) {
+          $kategoria = "none";
+        }
+        $kategoria = $keytoname_1[$kategoria];
+        if (!array_key_exists($region, $keytoname_2)) {
+          $region = "none";
+        }
+        $region = $keytoname_2[$region];
+        // Сколько посетителей в каждой категории.
+        $visitors_kateg[$kategoria]['all'][] = [
+          'kto' => $kategoria,
+          'skolko' => $kolvo_po_kateg,
+        ];
+        if (!isset($visitors_kateg[$kategoria]['sum'])) {
+          $visitors_kateg[$kategoria]['sum'] = 0;
+          $visitors_kateg[$kategoria]['key'] = $kategoria;
+        }
+        $current_visitors_kateg = $visitors_kateg[$kategoria]['sum'] + $kolvo_po_kateg;
+        $visitors_kateg[$kategoria]['sum'] = $current_visitors_kateg;
+
+        // Определяем сколько посетителей из каких регионов.
+        $visitors_reg[$region]['all'][] = [
+          'skolko' => $kolvo_po_kateg,
+          'otkuda' => $region,
+        ];
+        if (!isset($visitors_reg[$region]['sum'])) {
+          $visitors_reg[$region]['sum'] = 0;
+          $visitors_reg[$region]['key'] = $region;
+        }
+        $current_visitors_reg = $visitors_reg[$region]['sum'] + $kolvo_po_kateg;
+        $visitors_reg[$region]['sum'] = $current_visitors_reg;
+        // Сумма всех людей.
+        $summa_ludey = $summa_ludey + $kolvo_po_kateg;
+      }
     }
 
+    // Считаем общий доход по всем программам: сумма всех "оплачено".
+    $payments = $this->getPayment();
+    $payment = [];
+    $vsego_oplacheno = 0;
+    foreach ($payments as $key => $node_payment) {
+      $id = $node_payment->id();
+      $payment[$id] = [
+        'oplacheno' => $node_payment->field_payment_summa->value,
+      ];
+      $vsego_oplacheno = $vsego_oplacheno + $payment[$id]['oplacheno'];
+    }
+
+    // Получаем ФИО работника и отработанные им часы.
     $teams = $this->getTeam();
     $team = [];
     foreach ($teams as $key => $node_team) {
@@ -93,6 +165,7 @@ class PageItog extends ControllerBase {
         $team[$tid]['chas_itogo'] = 0;
       }
       $team[$tid]['chas_itogo'] = $team[$tid]['chas_itogo'] + $hours;
+      // ВСЕ часы в сумме.
       $vsego_chasov = $vsego_chasov + $hours;
       /*
       $chas[] = [
@@ -100,6 +173,8 @@ class PageItog extends ControllerBase {
         'id' => $node_exhour->field_exhour_team->entity->id(),
       ]; */
     }
+
+    // А вот и сам массив, данные из которого мы выводим на странице.
     $renderable = [];
     $renderable['info'] = [
       '#markup' => "Отчет с $start по $end",
@@ -107,11 +182,14 @@ class PageItog extends ControllerBase {
     $data = [
       'reportmonth' => format_date(strtotime($end), 'custom', 'M Y'),
       'team' => $team,
-      'vsego_chasov' => $vsego_chasov,
+      'vsego_chasov' => number_format($vsego_chasov, 0, ",", " "),
       'all_programm' => $all_programm,
       'vsego_programm' => $vsego_programm,
-      'all_people' => $all_people,
-      'vsego_people' => $vsego_people,
+      'vsego_people' => number_format($vsego_people, 0, ",", " ") . " чел.",
+      'summ_fakt_cost' => number_format($summ_fakt_cost, 0, ",", " ") . " руб.",
+      'oplacheno' => number_format($vsego_oplacheno, 0, ",", " ") . " руб.",
+      'all_kategory' => $visitors_kateg,
+      'all_region' => $visitors_reg,
     ];
 
     $renderable['h'] = array(
@@ -120,6 +198,25 @@ class PageItog extends ControllerBase {
     );
   //  dsm($renderable);
     return $renderable;
+  }
+
+  /**
+   * Делаем из поля "ссылка на команду" массив людей.
+   */
+  public function getOrdersTeam($field_orders_team) {
+    $team = [];
+    foreach ($field_orders_team as $key => $man) {
+      $node_team = $man->entity;
+      $lastname = $node_team->field_team_name_last->value;
+      $name = $node_team->field_team_name->value;
+      $middlename = $node_team->field_team_name_middle->value;
+      $team[] = [
+        'Ф работника' => $lastname,
+        'И работника' => $name,
+        'О работника' => $middlename,
+      ];
+    }
+    return $team;
   }
 
   /**
@@ -156,6 +253,18 @@ class PageItog extends ControllerBase {
     $entity_ids = $query->execute();
     $teams = Node::loadMultiple($entity_ids);
     return $teams;
+  }
+
+  /**
+   * A getOgders.
+   */
+  public function getPayment() {
+    $query = \Drupal::entityQuery('node');
+    $query->condition('status', 1);
+    $query->condition('type', 'payment');
+    $entity_ids = $query->execute();
+    $payments = Node::loadMultiple($entity_ids);
+    return $payments;
   }
 
 }

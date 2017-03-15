@@ -6,8 +6,8 @@
 
 <div class="header">
   <p>Отчет за {{data.reportmonth}}
-    <h3>Учет музейных услуг</h3>
-    <table>
+    <h5>Учет музейных услуг</h5>
+    <table class="all_tables">
       <tr>
         <td><strong>№</strong></td>
         <td><strong>Тип программы</strong></td>
@@ -26,12 +26,42 @@
         <td>{{data.vsego_programm}}</td>
       </tr>
       <tr>
-        <td>Посещаемость</td>
-        <td>{{data.vsego_people}}</td>
+      </table>
+      <h5>Учет посетителей по категориям</h5>
+      <table class="all_tables">
+        <td><strong>№</strong></td>
+        <td><strong>Категория посетителей</strong></td>
+        <td><strong>Количество людей</strong></td>
       </tr>
-    </table>
-  <h3>Учет экскурсионных часов научных сотрудников</h3>
-  <table>
+      {% for kategory in data.all_kategory %}
+      <tr>
+        <td>{{ loop.index }}</td>
+        <td>{{ kategory.key }}</td>
+        <td>{{ kategory.sum }}</td>
+      </tr>
+      {% endfor %}
+      </table>
+      <h5>Учет посетителей по регионам</h5>
+      <table class="all_tables">
+      <tr>
+        <td><strong>№</strong></td>
+        <td><strong>Регионы посетителей</strong></td>
+        <td><strong>Количество людей</strong></td>
+      </tr>
+      {% for region in data.all_region %}
+      <tr>
+        <td>{{ loop.index }}</td>
+        <td>{{ region.key }}</td>
+        <td>{{ region.sum }}</td>
+      </tr>
+      {% endfor %}
+      </table>
+      <p> Посещаемость --- {{data.vsego_people}} </p>
+      <p> Доход фактический (исходя из фактической стоимости) --- {{data.summ_fakt_cost}} </p>
+      <p> Доход реальный (исходя из оплаченного) --- {{data.oplacheno}} </p>
+
+  <h5>Учет экскурсионных часов научных сотрудников</h5>
+  <table class="all_tables">
     <tr>
       <td><strong>№</strong></td>
       <td><strong>ФИО работника</strong></td>
