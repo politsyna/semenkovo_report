@@ -145,6 +145,8 @@ class PageItog extends ControllerBase {
       ];
       $vsego_oplacheno = $vsego_oplacheno + $payment[$id]['oplacheno'];
     }
+    // Считаем дебеторку: разницу между тем, что начислено за услуги и оплаченной суммой.
+    $debet = $summ_fakt_cost - $vsego_oplacheno;
 
     // Получаем ФИО работника и отработанные им часы.
     $teams = $this->getTeam();
@@ -188,6 +190,7 @@ class PageItog extends ControllerBase {
       'vsego_people' => number_format($vsego_people, 0, ",", " ") . " чел.",
       'summ_fakt_cost' => number_format($summ_fakt_cost, 0, ",", " ") . " руб.",
       'oplacheno' => number_format($vsego_oplacheno, 0, ",", " ") . " руб.",
+      'debet' => number_format($debet, 0, ",", " ") . " руб.",
       'all_kategory' => $visitors_kateg,
       'all_region' => $visitors_reg,
     ];
