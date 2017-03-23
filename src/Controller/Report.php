@@ -28,7 +28,7 @@ class Report extends ControllerBase {
       $month_next = format_date($i, 'custom', '25-m-Y');
       $output .= '<li class="list-item">';
       $output .= '<a href="/report/itog/' . $month_last . '/' . $month_next . '">';
-      $output .= format_date($i, 'custom', 'Итоговый отчет за M Y');
+      $output .= format_date($i, 'custom', 'Общий отчет за M Y');
       $output .= '</a><br>';
       $output .= '<a href="/report/exp/' . $month_last . '/' . $month_next . '">';
       $output .= format_date($i, 'custom', 'Расширенный отчет за M Y');
@@ -38,9 +38,10 @@ class Report extends ControllerBase {
       $i = $i + 31 * 24 * 60 * 60;
     }
     $output .= '</ul>';
-    return array(
-      '#markup' => $output,
-    );
+    return [
+      'form' => \Drupal::formBuilder()->getForm('Drupal\report\Form\DateChoice'),
+      'links' => ['#markup' => $output],
+    ];
   }
 
 }

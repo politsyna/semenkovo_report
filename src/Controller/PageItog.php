@@ -15,7 +15,7 @@ class PageItog extends ControllerBase {
    * A more complex _controller callback that takes arguments.
    */
   public function report($start, $end) {
-    $orders = $this->getOrders();
+    $orders = $this->getOrders($start, $end);
     $source = [];
     $all_programm = [];
     $vsego_programm = 0;
@@ -23,8 +23,12 @@ class PageItog extends ControllerBase {
     $vsego_people = 0;
     $fakt_cost = [];
     $summ_fakt_cost = 0;
+    $vsego_peopl_vhod = 0;
+    $summ_cost_vhod = 0;
     $visitors_kateg = [];
     $visitors_reg = [];
+    $visitors_vol = [];
+    $visitors_volobl = [];
     $keytoname_1 = [
       'adult' => 'Взрослые',
       'student' => 'Студенты',
@@ -85,12 +89,25 @@ class PageItog extends ControllerBase {
         'начислено за все услуги' => $source['фактическая стоимость услуги'],
       ];
       $summ_fakt_cost = $summ_fakt_cost + $fakt_cost[$id]['начислено за все услуги'];
+
       // Считаем посещаемость.
       $people = $source['общее количество людей'];
       $all_people[$id] = [
         'количество людей' => $source['общее количество людей'],
       ];
       $vsego_people = $vsego_people + $all_people[$id]['количество людей'];
+
+      if (!isset($programm_vhod[$name_programm])) {
+        $programm_vhod[$name_programm] = [
+          'name_programm_vhod' => $name_programm,
+          'summa_vhod' => $node->field_orders_group->value,
+          'cost_vhod' => $node->field_orders_cost->value,
+        ];
+        if ($name_programm == "Входной билет") {
+          $vsego_peopl_vhod = $vsego_peopl_vhod + $programm_vhod[$name_programm]['summa_vhod'];
+          $summ_cost_vhod = $summ_cost_vhod + $programm_vhod[$name_programm]['cost_vhod'];
+        }
+      }
 
       // Определяем исходные данные для расчета кол-ва посетителей в каждой категории и из каких регионов.
       foreach ($fc as $k => $v) {
@@ -131,11 +148,144 @@ class PageItog extends ControllerBase {
         $visitors_reg[$region]['sum'] = $current_visitors_reg;
         // Сумма всех людей.
         $summa_ludey = $summa_ludey + $kolvo_po_kateg;
+
+        // Определяем сколько посетителей каждой категории из каких регионов.
+        if ($region == "Вологда") {
+          $visitors_vol['all'][] = [
+            'kto' => $kategoria,
+            'skolko' => $kolvo_po_kateg,
+            'otkuda' => $region,
+          ];
+          if (!isset($visitors_vol[$kategoria]['sum'])) {
+            $visitors_vol[$kategoria]['sum'] = 0;
+            $visitors_vol[$kategoria]['key'] = $kategoria;
+            $visitors_vol[$kategoria]['ekskurs'] = 0;
+            $visitors_vol[$kategoria]['meropr'] = 0;
+          }
+          if ($name_programm == 'Игровые мероприятия' || $name_programm == 'Мастер-класс' ||
+          $name_programm == 'Один день из жизни деревни' || $name_programm == 'Солнцеворот' ||
+          $name_programm == 'Туристический поезд' || $name_programm == 'Экологическая программа' ||
+          $name_programm == 'Экскурсионное обслуживание') {
+            $visitors_vol[$kategoria]['ekskurs'] = $visitors_vol[$kategoria]['ekskurs'] + $kolvo_po_kateg;
+          }
+          elseif ($name_programm == 'Массовое мероприятие') {
+            $visitors_vol[$kategoria]['meropr'] = $visitors_vol[$kategoria]['meropr'] + $kolvo_po_kateg;
+          }
+          if ($name_programm == 'Входной билет' || $name_programm == 'Служебная' ||
+          $name_programm == 'Аренда') {
+            $visitors_vol[$kategoria]['sum'] = $visitors_vol[$kategoria]['sum'] + $kolvo_po_kateg;
+          }
+        }
+        if ($region == "Вологодская область") {
+          $visitors_volobl['all'][] = [
+            'kto' => $kategoria,
+            'skolko' => $kolvo_po_kateg,
+            'otkuda' => $region,
+          ];
+          if (!isset($visitors_volobl[$kategoria]['sum'])) {
+            $visitors_volobl[$kategoria]['sum'] = 0;
+            $visitors_volobl[$kategoria]['key'] = $kategoria;
+            $visitors_volobl[$kategoria]['ekskurs'] = 0;
+            $visitors_volobl[$kategoria]['meropr'] = 0;
+          }
+          if ($name_programm == 'Игровые мероприятия' || $name_programm == 'Мастер-класс' ||
+          $name_programm == 'Один день из жизни деревни' || $name_programm == 'Солнцеворот' ||
+          $name_programm == 'Туристический поезд' || $name_programm == 'Экологическая программа' ||
+          $name_programm == 'Экскурсионное обслуживание') {
+            $visitors_volobl[$kategoria]['ekskurs'] = $visitors_volobl[$kategoria]['ekskurs'] + $kolvo_po_kateg;
+          }
+          elseif ($name_programm == 'Массовое мероприятие') {
+            $visitors_volobl[$kategoria]['meropr'] = $visitors_volobl[$kategoria]['meropr'] + $kolvo_po_kateg;
+          }
+          if ($name_programm == 'Входной билет' || $name_programm == 'Служебная' ||
+          $name_programm == 'Аренда') {
+            $visitors_volobl[$kategoria]['sum'] = $visitors_volobl[$kategoria]['sum'] + $kolvo_po_kateg;
+          }
+        }
+        if ($region == "Другие регионы России") {
+          $visitors_russia['all'][] = [
+            'kto' => $kategoria,
+            'skolko' => $kolvo_po_kateg,
+            'otkuda' => $region,
+          ];
+          if (!isset($visitors_russia[$kategoria]['sum'])) {
+            $visitors_russia[$kategoria]['sum'] = 0;
+            $visitors_russia[$kategoria]['key'] = $kategoria;
+            $visitors_russia[$kategoria]['ekskurs'] = 0;
+            $visitors_russia[$kategoria]['meropr'] = 0;
+          }
+          if ($name_programm == 'Игровые мероприятия' || $name_programm == 'Мастер-класс' ||
+          $name_programm == 'Один день из жизни деревни' || $name_programm == 'Солнцеворот' ||
+          $name_programm == 'Туристический поезд' || $name_programm == 'Экологическая программа' ||
+          $name_programm == 'Экскурсионное обслуживание') {
+            $visitors_russia[$kategoria]['ekskurs'] = $visitors_russia[$kategoria]['ekskurs'] + $kolvo_po_kateg;
+          }
+          elseif ($name_programm == 'Массовое мероприятие') {
+            $visitors_russia[$kategoria]['meropr'] = $visitors_russia[$kategoria]['meropr'] + $kolvo_po_kateg;
+          }
+          if ($name_programm == 'Входной билет' || $name_programm == 'Служебная' ||
+          $name_programm == 'Аренда') {
+            $visitors_russia[$kategoria]['sum'] = $visitors_russia[$kategoria]['sum'] + $kolvo_po_kateg;
+          }
+        }
+        if ($region == "Другие страны") {
+          $visitors_another['all'][] = [
+            'kto' => $kategoria,
+            'skolko' => $kolvo_po_kateg,
+            'otkuda' => $region,
+          ];
+          if (!isset($visitors_another[$kategoria]['sum'])) {
+            $visitors_another[$kategoria]['sum'] = 0;
+            $visitors_another[$kategoria]['key'] = $kategoria;
+            $visitors_another[$kategoria]['ekskurs'] = 0;
+            $visitors_another[$kategoria]['meropr'] = 0;
+          }
+          if ($name_programm == 'Игровые мероприятия' || $name_programm == 'Мастер-класс' ||
+          $name_programm == 'Один день из жизни деревни' || $name_programm == 'Солнцеворот' ||
+          $name_programm == 'Туристический поезд' || $name_programm == 'Экологическая программа' ||
+          $name_programm == 'Экскурсионное обслуживание') {
+            $visitors_another[$kategoria]['ekskurs'] = $visitors_another[$kategoria]['ekskurs'] + $kolvo_po_kateg;
+          }
+          elseif ($name_programm == 'Массовое мероприятие') {
+            $visitors_another[$kategoria]['meropr'] = $visitors_another[$kategoria]['meropr'] + $kolvo_po_kateg;
+          }
+          if ($name_programm == 'Входной билет' || $name_programm == 'Служебная' ||
+          $name_programm == 'Аренда') {
+            $visitors_another[$kategoria]['sum'] = $visitors_another[$kategoria]['sum'] + $kolvo_po_kateg;
+          }
+        }
+        if ($region == "Регион неизвестен") {
+          $visitors_none['all'][] = [
+            'kto' => $kategoria,
+            'skolko' => $kolvo_po_kateg,
+            'otkuda' => $region,
+          ];
+          if (!isset($visitors_none[$kategoria]['sum'])) {
+            $visitors_none[$kategoria]['sum'] = 0;
+            $visitors_none[$kategoria]['key'] = $kategoria;
+            $visitors_none[$kategoria]['ekskurs'] = 0;
+            $visitors_none[$kategoria]['meropr'] = 0;
+          }
+          if ($name_programm == 'Игровые мероприятия' || $name_programm == 'Мастер-класс' ||
+          $name_programm == 'Один день из жизни деревни' || $name_programm == 'Солнцеворот' ||
+          $name_programm == 'Туристический поезд' || $name_programm == 'Экологическая программа' ||
+          $name_programm == 'Экскурсионное обслуживание') {
+            $visitors_none[$kategoria]['ekskurs'] = $visitors_none[$kategoria]['ekskurs'] + $kolvo_po_kateg;
+          }
+          elseif ($name_programm == 'Массовое мероприятие') {
+            $visitors_none[$kategoria]['meropr'] = $visitors_none[$kategoria]['meropr'] + $kolvo_po_kateg;
+          }
+          if ($name_programm == 'Входной билет' || $name_programm == 'Служебная' ||
+          $name_programm == 'Аренда') {
+            $visitors_none[$kategoria]['sum'] = $visitors_none[$kategoria]['sum'] + $kolvo_po_kateg;
+          }
+        }
       }
     }
 
     // Считаем общий доход по всем программам: сумма всех "оплачено".
-    $payments = $this->getPayment();
+    $nids = array_keys($orders);
+    $payments = $this->getPayment($nids);
     $payment = [];
     $vsego_oplacheno = 0;
     foreach ($payments as $key => $node_payment) {
@@ -153,53 +303,270 @@ class PageItog extends ControllerBase {
     $team = [];
     foreach ($teams as $key => $node_team) {
       $id = $node_team->id();
-      $team[$id] = [
-        'title' => $node_team->title->value,
-      ];
+      if ($node_team->field_team_status->value == 'active') {
+        $team[$id] = [
+          'title' => $node_team->title->value,
+          'status' => "Штатный",
+        ];
+      }
     }
-    $exhour = $this->getExhour();
+    $team['o'] = [
+      'title' => "Внештатные сотрудники",
+      'status' => "Внештатный",
+    ];
+
+    $exhour = $this->getExhour($nids);
     $vsego_chasov = 0;
     foreach ($exhour as $key => $node_exhour) {
       $tid = $node_exhour->field_exhour_team->entity->id();
       $hours = $node_exhour->field_exhour_hours->value;
-      $team[$tid]['chas'][] = $hours;
+      if (isset($team[$tid]['status']) && $team[$tid]['status'] == "Штатный") {
+
+      }
+      else {
+        $tid = 'o';
+      }
       if (!isset($team[$tid]['chas_itogo'])) {
+        $team[$tid]['chas'][] = $hours;
         $team[$tid]['chas_itogo'] = 0;
       }
       $team[$tid]['chas_itogo'] = $team[$tid]['chas_itogo'] + $hours;
       // ВСЕ часы в сумме.
       $vsego_chasov = $vsego_chasov + $hours;
-      /*
-      $chas[] = [
-        'часы работника' => $hours,
-        'id' => $node_exhour->field_exhour_team->entity->id(),
-      ]; */
     }
-
+    
     // А вот и сам массив, данные из которого мы выводим на странице.
     $renderable = [];
     $renderable['info'] = [
       '#markup' => "Отчет с $start по $end",
     ];
+    $renderable['info-1'] = [
+      '#markup' => "<h5> Отчет за " . format_date(strtotime($end), 'custom', 'M Y') . "</h5>",
+    ];
     $data = [
-      'reportmonth' => format_date(strtotime($end), 'custom', 'M Y'),
       'team' => $team,
       'vsego_chasov' => number_format($vsego_chasov, 0, ",", " "),
       'all_programm' => $all_programm,
       'vsego_programm' => $vsego_programm,
       'vsego_people' => number_format($vsego_people, 0, ",", " ") . " чел.",
+      'vsego_people_vhod' => number_format($vsego_peopl_vhod, 0, ",", " ") . " чел.",
+      'summ_cost_vhod' => number_format($summ_cost_vhod, 0, ",", " ") . " руб.",
       'summ_fakt_cost' => number_format($summ_fakt_cost, 0, ",", " ") . " руб.",
       'oplacheno' => number_format($vsego_oplacheno, 0, ",", " ") . " руб.",
       'debet' => number_format($debet, 0, ",", " ") . " руб.",
       'all_kategory' => $visitors_kateg,
       'all_region' => $visitors_reg,
     ];
-
-    $renderable['h'] = array(
+    // Строим три таблицы по разным категориям посетителей из разных регионов.
+    // Шапка таблицы:
+    $header = [
+      '',
+      'Вологда',
+      'Вологодская область',
+      'Регионы России',
+      'Другие страны',
+      'Регион неизвестен',
+    ];
+    // Левый столбец таблицы:
+    $kat_visit = [
+      'adult' => 'Взрослые',
+      'student' => 'Студенты',
+      'school' => 'Школьники',
+      'baby' => 'Дошкольники',
+      'old' => 'Пенсионеры',
+      'military' => 'Военнослужащие',
+      'museum' => 'Музейные работники',
+      'lgotniki' => 'Льготники',
+      'guest' => 'Гости',
+    ];
+    // Информация для таблицы-1 (посещаемость экскурсий).
+    $rows1 = [];
+    foreach ($kat_visit as $key) {
+      $row1 = [];
+      foreach ($header as $k => $v) {
+        if ($k == 0) {
+          $row1[] = $key;
+        }
+        elseif ($k == 1) {
+          if (isset($visitors_vol[$key])) {
+            $row1[] = $visitors_vol[$key]['ekskurs'];
+          }
+          else {
+            $row1[] = 0;
+          }
+        }
+        elseif ($k == 2) {
+          if (isset($visitors_volobl[$key])) {
+            $row1[] = $visitors_volobl[$key]['ekskurs'];
+          }
+          else {
+            $row1[] = 0;
+          }
+        }
+        elseif ($k == 3) {
+          if (isset($visitors_russia[$key])) {
+            $row1[] = $visitors_russia[$key]['ekskurs'];
+          }
+          else {
+            $row1[] = 0;
+          }
+        }
+        elseif ($k == 4) {
+          if (isset($visitors_another[$key])) {
+            $row1[] = $visitors_another[$key]['ekskurs'];
+          }
+          else {
+            $row1[] = 0;
+          }
+        }
+        elseif ($k == 5) {
+          if (isset($visitors_none[$key])) {
+            $row1[] = $visitors_none[$key]['ekskurs'];
+          }
+          else {
+            $row1[] = 0;
+          }
+        }
+        else {
+          $row1[] = 0;
+        }
+      }
+      $rows1[] = $row1;
+    }
+    // Информация для таблицы-2 (посещаемость мероприятий).
+    $rows2 = [];
+    foreach ($kat_visit as $key) {
+      $row2 = [];
+      foreach ($header as $k => $v) {
+        if ($k == 0) {
+          $row2[] = $key;
+        }
+        elseif ($k == 1) {
+          if (isset($visitors_vol[$key])) {
+            $row2[] = $visitors_vol[$key]['meropr'];
+          }
+          else {
+            $row2[] = 0;
+          }
+        }
+        elseif ($k == 2) {
+          if (isset($visitors_volobl[$key])) {
+            $row2[] = $visitors_volobl[$key]['meropr'];
+          }
+          else {
+            $row2[] = 0;
+          }
+        }
+        elseif ($k == 3) {
+          if (isset($visitors_russia[$key])) {
+            $row2[] = $visitors_russia[$key]['meropr'];
+          }
+          else {
+            $row2[] = 0;
+          }
+        }
+        elseif ($k == 4) {
+          if (isset($visitors_another[$key])) {
+            $row2[] = $visitors_another[$key]['meropr'];
+          }
+          else {
+            $row2[] = 0;
+          }
+        }
+        elseif ($k == 5) {
+          if (isset($visitors_none[$key])) {
+            $row2[] = $visitors_none[$key]['meropr'];
+          }
+          else {
+            $row2[] = 0;
+          }
+        }
+        else {
+          $row2[] = 0;
+        }
+      }
+      $rows2[] = $row2;
+    }
+    // Информация для таблицы-3 (посещаемость общая - суммарная).
+    $rows3 = [];
+    foreach ($kat_visit as $key) {
+      $row3 = [];
+      foreach ($header as $k => $v) {
+        if ($k == 0) {
+          $row3[] = $key;
+        }
+        elseif ($k == 1) {
+          if (isset($visitors_vol[$key])) {
+            $row3[] = $visitors_vol[$key]['sum'];
+          }
+          else {
+            $row3[] = 0;
+          }
+        }
+        elseif ($k == 2) {
+          if (isset($visitors_volobl[$key])) {
+            $row3[] = $visitors_volobl[$key]['sum'];
+          }
+          else {
+            $row3[] = 0;
+          }
+        }
+        elseif ($k == 3) {
+          if (isset($visitors_russia[$key])) {
+            $row3[] = $visitors_russia[$key]['sum'];
+          }
+          else {
+            $row3[] = 0;
+          }
+        }
+        elseif ($k == 4) {
+          if (isset($visitors_another[$key])) {
+            $row3[] = $visitors_another[$key]['sum'];
+          }
+          else {
+            $row3[] = 0;
+          }
+        }
+        elseif ($k == 5) {
+          if (isset($visitors_none[$key])) {
+            $row3[] = $visitors_none[$key]['sum'];
+          }
+          else {
+            $row3[] = 0;
+          }
+        }
+        else {
+          $row3[] = 0;
+        }
+      }
+      $rows3[] = $row3;
+    }
+    // Массив для построения таблиц:
+    $renderable['ekskurs'] = [
+      '#theme' => 'table',
+      '#caption' => 'Категории посетителей экскурсий',
+      '#attributes' => ['class' => ['tables-kateg-posetit']],
+      '#header' => $header,
+      '#rows' => $rows1,
+    ];
+    $renderable['meropr'] = [
+      '#theme' => 'table',
+      '#caption' => 'Категории посетителей мероприятий',
+      '#attributes' => ['class' => ['tables-kateg-posetit']],
+      '#header' => $header,
+      '#rows' => $rows2,
+    ];
+    $renderable['sum'] = [
+      '#theme' => 'table',
+      '#caption' => 'Категории посетителей (сводная)',
+      '#attributes' => ['class' => ['tables-kateg-posetit']],
+      '#header' => $header,
+      '#rows' => $rows3,
+    ];
+    $renderable['h'] = [
       '#theme' => 'report-header',
       '#data' => $data,
-    );
-  //  dsm($renderable);
+    ];
     return $renderable;
   }
 
@@ -225,10 +592,16 @@ class PageItog extends ControllerBase {
   /**
    * Функциями getХххх() формируем из ноды объекты.
    */
-  public function getOrders() {
+  public function getOrders($start, $end) {
+    $start = strtotime($start);
+    $end = strtotime($end);
+    $start_norm = format_date($start, 'custom', "Y-m-d");
+    $end_norm = format_date($end, 'custom', "Y-m-d");
     $query = \Drupal::entityQuery('node');
     $query->condition('status', 1);
     $query->condition('type', 'orders');
+    $query->condition('field_orders_date', $start_norm, '>');
+    $query->condition('field_orders_date', $end_norm, '<');
     $entity_ids = $query->execute();
     $orders = Node::loadMultiple($entity_ids);
     return $orders;
@@ -237,10 +610,11 @@ class PageItog extends ControllerBase {
   /**
    * A getOgders.
    */
-  public function getExhour() {
+  public function getExhour($nids = []) {
     $query = \Drupal::entityQuery('node');
     $query->condition('status', 1);
     $query->condition('type', 'exhour');
+    $query->condition('field_exhour_ref_orders', $nids, 'IN');
     $entity_ids = $query->execute();
     $exhour = Node::loadMultiple($entity_ids);
     return $exhour;
@@ -261,10 +635,11 @@ class PageItog extends ControllerBase {
   /**
    * A getOgders.
    */
-  public function getPayment() {
+  public function getPayment($nids = []) {
     $query = \Drupal::entityQuery('node');
     $query->condition('status', 1);
     $query->condition('type', 'payment');
+    $query->condition('field_payment_ref_orders', $nids, 'IN');
     $entity_ids = $query->execute();
     $payments = Node::loadMultiple($entity_ids);
     return $payments;
