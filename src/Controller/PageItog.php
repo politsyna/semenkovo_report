@@ -334,14 +334,12 @@ class PageItog extends ControllerBase {
       // ВСЕ часы в сумме.
       $vsego_chasov = $vsego_chasov + $hours;
     }
-    
+
     // А вот и сам массив, данные из которого мы выводим на странице.
     $renderable = [];
     $renderable['info'] = [
-      '#markup' => "Отчет с $start по $end",
-    ];
-    $renderable['info-1'] = [
-      '#markup' => "<h5> Отчет за " . format_date(strtotime($end), 'custom', 'M Y') . "</h5>",
+      '#markup' => "Отчет с " . format_date(strtotime($start), 'custom', 'd-m-Y')
+      . " по " . format_date(strtotime($end), 'custom', 'd-m-Y'),
     ];
     $data = [
       'team' => $team,

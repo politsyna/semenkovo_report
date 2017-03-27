@@ -40,7 +40,7 @@ class Report extends ControllerBase {
     $output .= '</ul>';
     return [
       'form' => \Drupal::formBuilder()->getForm('Drupal\report\Form\DateChoice'),
-      'links' => ['#markup' => $output],
+      // 'links' => ['#markup' => $output],
     ];
   }
 
