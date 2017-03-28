@@ -5,6 +5,7 @@ namespace Drupal\report\Controller;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\node\Entity\Node;
 use Drupal\node_orders\Controller\Group;
+use Drupal\user\Entity\User;
 
 /**
  * Controller routines for page example routes.
@@ -20,11 +21,19 @@ class PageItog extends ControllerBase {
     $all_programm = [];
     $vsego_programm = 0;
     $all_people = [];
+    $kolvo_ekskurs = 0;
+    $kolvo_meropr = 0;
     $vsego_people = 0;
     $fakt_cost = [];
     $summ_fakt_cost = 0;
     $vsego_peopl_vhod = 0;
+    $people_free_vhod_mr = 0;
+    $people_free_vhod_lg = 0;
+    $people_free_vhod_gst = 0;
+    $people_free_vhod = 0;
     $summ_cost_vhod = 0;
+    $kolvo_people_ekskurs = 0;
+    $kolvo_people_meropr = 0;
     $visitors_kateg = [];
     $visitors_reg = [];
     $visitors_vol = [];
@@ -36,7 +45,7 @@ class PageItog extends ControllerBase {
       'baby' => 'Дошкольники',
       'old' => 'Пенсионеры',
       'military' => 'Военнослужащие',
-      'museum' => 'Музейные',
+      'museum' => 'Музейные работники',
       'lgotniki' => 'Льготники',
       'guest' => 'Гости',
       'none' => 'Неизвестно',
@@ -82,6 +91,18 @@ class PageItog extends ControllerBase {
       $all_programm[$name_programm]['summa'] = $new_summa;
       // 5. Считаем сколько всего программ проведено (= сколько циклов прошло).
       $vsego_programm = $vsego_programm + $kolvo_programm;
+
+      // Определяем общее количество экскурсий.
+      if ($name_programm == 'Игровые мероприятия' || $name_programm == 'Мастер-класс' ||
+      $name_programm == 'Один день из жизни деревни' || $name_programm == 'Солнцеворот' ||
+      $name_programm == 'Туристический поезд' || $name_programm == 'Экологическая программа' ||
+      $name_programm == 'Экскурсионное обслуживание') {
+        $kolvo_ekskurs = $kolvo_ekskurs + $kolvo_programm;
+      }
+      // Определяем общее количество массовых мероприятий.
+      if ($name_programm == 'Массовое мероприятие') {
+        $kolvo_meropr = $kolvo_meropr + $kolvo_programm;
+      }
 
       // Считаем общий доход по всем программам: сумма всех "фактическая стоимость".
       $id = $node->id();
@@ -134,7 +155,19 @@ class PageItog extends ControllerBase {
         }
         $current_visitors_kateg = $visitors_kateg[$kategoria]['sum'] + $kolvo_po_kateg;
         $visitors_kateg[$kategoria]['sum'] = $current_visitors_kateg;
-
+        // Сколько льготников пришло на услугу "Входной билет".
+        if ($name_programm == 'Входной билет') {
+          if ($kategoria == 'Музейные работники') {
+            $people_free_vhod_mr = $people_free_vhod_mr + $kolvo_po_kateg;
+          }
+          if ($kategoria == 'Льготники') {
+            $people_free_vhod_lg = $people_free_vhod_lg + $kolvo_po_kateg;
+          }
+          if ($kategoria == 'Гости') {
+            $people_free_vhod_gst = $people_free_vhod_gst + $kolvo_po_kateg;
+          }
+          $people_free_vhod = $people_free_vhod_mr + $people_free_vhod_lg + $people_free_vhod_gst;
+        }
         // Определяем сколько посетителей из каких регионов.
         $visitors_reg[$region]['all'][] = [
           'skolko' => $kolvo_po_kateg,
@@ -148,6 +181,18 @@ class PageItog extends ControllerBase {
         $visitors_reg[$region]['sum'] = $current_visitors_reg;
         // Сумма всех людей.
         $summa_ludey = $summa_ludey + $kolvo_po_kateg;
+
+        // Определяем общее количество экскурсантов.
+        if ($name_programm == 'Игровые мероприятия' || $name_programm == 'Мастер-класс' ||
+        $name_programm == 'Один день из жизни деревни' || $name_programm == 'Солнцеворот' ||
+        $name_programm == 'Туристический поезд' || $name_programm == 'Экологическая программа' ||
+        $name_programm == 'Экскурсионное обслуживание') {
+          $kolvo_people_ekskurs = $kolvo_people_ekskurs + $kolvo_po_kateg;
+        }
+        // Определяем общее количество участников массовых мероприятий.
+        if ($name_programm == 'Массовое мероприятие') {
+          $kolvo_people_meropr = $kolvo_people_meropr + $kolvo_po_kateg;
+        }
 
         // Определяем сколько посетителей каждой категории из каких регионов.
         if ($region == "Вологда") {
@@ -288,13 +333,32 @@ class PageItog extends ControllerBase {
     $payments = $this->getPayment($nids);
     $payment = [];
     $vsego_oplacheno = 0;
+    $oplacheno_ekskurs = 0;
+    $oplacheno_meropr = 0;
     foreach ($payments as $key => $node_payment) {
+      $node_orders = $node_payment->field_payment_ref_orders->entity;
+      $node_usluga = $node_orders->field_orders_ref_activity->entity;
+      $termin = $node_usluga->field_activity_type->entity;
+      $name_programm = $termin->name->value;
       $id = $node_payment->id();
       $payment[$id] = [
         'oplacheno' => $node_payment->field_payment_summa->value,
       ];
       $vsego_oplacheno = $vsego_oplacheno + $payment[$id]['oplacheno'];
+
+      // Считаем доход по всем программам, относящимся к экскурсиям (сумма всех "оплачено").
+      if ($name_programm == 'Игровые мероприятия' || $name_programm == 'Мастер-класс' ||
+      $name_programm == 'Один день из жизни деревни' || $name_programm == 'Солнцеворот' ||
+      $name_programm == 'Туристический поезд' || $name_programm == 'Экологическая программа' ||
+      $name_programm == 'Экскурсионное обслуживание') {
+        $oplacheno_ekskurs = $oplacheno_ekskurs + $payment[$id]['oplacheno'];
+      }
+      // Считаем доход по всем программам, относящимся к массовым мероприятиям (сумма всех "оплачено").
+      if ($name_programm == 'Массовое мероприятие') {
+        $oplacheno_meropr = $oplacheno_meropr + $payment[$id]['oplacheno'];
+      }
     }
+
     // Считаем дебеторку: разницу между тем, что начислено за услуги и оплаченной суммой.
     $debet = $summ_fakt_cost - $vsego_oplacheno;
 
@@ -334,6 +398,14 @@ class PageItog extends ControllerBase {
       // ВСЕ часы в сумме.
       $vsego_chasov = $vsego_chasov + $hours;
     }
+    foreach ($team as $key => $value) {
+      if (!isset($value['chas_itogo'])) {
+        unset($team[$key]);
+      }
+    }
+
+    $uid = \Drupal::currentUser()->id();
+    $user = User::load($uid);
 
     // А вот и сам массив, данные из которого мы выводим на странице.
     $renderable = [];
@@ -346,14 +418,24 @@ class PageItog extends ControllerBase {
       'vsego_chasov' => number_format($vsego_chasov, 0, ",", " "),
       'all_programm' => $all_programm,
       'vsego_programm' => $vsego_programm,
+      'kolvo_ekskurs' => number_format($kolvo_ekskurs, 0, ",", " ") . " шт.",
+      'kolvo_meropr' => number_format($kolvo_meropr, 0, ",", " ") . " шт.",
       'vsego_people' => number_format($vsego_people, 0, ",", " ") . " чел.",
       'vsego_people_vhod' => number_format($vsego_peopl_vhod, 0, ",", " ") . " чел.",
+      'people_free_vhod' => number_format($people_free_vhod, 0, ",", " ") . " чел.",
+      'kolvo_people_ekskurs' => number_format($kolvo_people_ekskurs, 0, ",", " ") . " чел.",
+      'kolvo_people_meropr' => number_format($kolvo_people_meropr, 0, ",", " ") . " чел.",
       'summ_cost_vhod' => number_format($summ_cost_vhod, 0, ",", " ") . " руб.",
       'summ_fakt_cost' => number_format($summ_fakt_cost, 0, ",", " ") . " руб.",
       'oplacheno' => number_format($vsego_oplacheno, 0, ",", " ") . " руб.",
+      'oplacheno_ekskurs' => number_format($oplacheno_ekskurs, 0, ",", " ") . " руб.",
+      'oplacheno_meropr' => number_format($oplacheno_meropr, 0, ",", " ") . " руб.",
       'debet' => number_format($debet, 0, ",", " ") . " руб.",
       'all_kategory' => $visitors_kateg,
       'all_region' => $visitors_reg,
+      'today' => format_date(time(), 'custom', 'd-m-Y'),
+      'now' => format_date(time(), 'custom', 'H:i'),
+      'user' => $user->name->value,
     ];
     // Строим три таблицы по разным категориям посетителей из разных регионов.
     // Шапка таблицы:
@@ -540,21 +622,21 @@ class PageItog extends ControllerBase {
       $rows3[] = $row3;
     }
     // Массив для построения таблиц:
-    $renderable['ekskurs'] = [
+    $data['ekskurs'] = [
       '#theme' => 'table',
       '#caption' => 'Категории посетителей экскурсий',
       '#attributes' => ['class' => ['tables-kateg-posetit']],
       '#header' => $header,
       '#rows' => $rows1,
     ];
-    $renderable['meropr'] = [
+    $data['meropr'] = [
       '#theme' => 'table',
       '#caption' => 'Категории посетителей мероприятий',
       '#attributes' => ['class' => ['tables-kateg-posetit']],
       '#header' => $header,
       '#rows' => $rows2,
     ];
-    $renderable['sum'] = [
+    $data['sum'] = [
       '#theme' => 'table',
       '#caption' => 'Категории посетителей (сводная)',
       '#attributes' => ['class' => ['tables-kateg-posetit']],

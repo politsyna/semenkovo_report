@@ -3,8 +3,34 @@
   form
 #}
 {% set team = data.team %}
+<div class="header-report-semenkovo">
+    <h5>Учет экскурсионных часов научных сотрудников</h5>
+    <table class="all_tables">
+      <tr>
+        <td><strong>№</strong></td>
+        <td><strong>ФИО работника</strong></td>
+        <td><strong>Часы</strong></td>
+      </tr>
+      {% for person in team %}
+      {% if person.chas_itogo %}
+      <tr>
+        <td>{{ loop.index }}</td>
+        <td>{{ person.title }}</td>
+        <td>{{ person.chas_itogo }}</td>
+      </tr>
+      {% endif %}
+      {% endfor %}
+      <tr>
+        <td> </td>
+        <td>ВСЕГО:</td>
+        <td>{{data.vsego_chasov}}</td>
+      </tr>
+    </table>
 
-<div class="header">
+    {{data.ekskurs}}
+    {{data.meropr}}
+    {{data.sum}}
+
     <h5>Учет музейных услуг</h5>
     <table class="all_tables">
       <tr>
@@ -56,35 +82,23 @@
       </tr>
       {% endfor %}
       </table>
-      <h5>Люди:</h5>
-      <h5>Деньги:</h5>
-      <h5>Посещаемость:</h5>
-      <p> Посещаемость --- {{data.vsego_people}} </p>
+
+      <h4>Посещаемость:</h4>
+      <p> Посещаемость (суммарная) --- {{data.vsego_people}} </p>
       <p> Посещаемость по входным билетам --- {{data.vsego_people_vhod}} </p>
-
-      <p> Доход по билетам --- {{data.summ_cost_vhod}} </p>
-      <p> Стоимость оказанных услуг --- {{data.summ_fakt_cost}} </p>
-      <p> Оплачено --- {{data.oplacheno}} </p>
+      <p> Количество экскурсий --- {{data.kolvo_ekskurs}} </p>
+      <p> Количество массовых мероприятий --- {{data.kolvo_meropr}} </p>
+      <h4>Люди:</h4>
+      <p> Количество лиц, имеющих право бесплатного посещения --- {{data.people_free_vhod}} </p>
+      <p> Количество экскурсантов --- {{data.kolvo_people_ekskurs}} </p>
+      <p> Количество участников массовых мероприятий --- {{data.kolvo_people_meropr}} </p>
+      <h4>Деньги:</h4>
+      <p> Доход по входным билетам --- {{data.summ_cost_vhod}} </p>
+      <p> Доход за экскурсии (оплачено) --- {{data.oplacheno_ekskurs}} </p>
+      <p> Доход за мероприятия (оплачено) --- {{data.oplacheno_meropr}} </p>
+      <p> Доход за все услуги (оплачено) --- {{data.oplacheno}} </p>
+      <p> Стоимость (фактическая) всех оказанных услуг --- {{data.summ_fakt_cost}} </p>
       <p> Дебет --- {{data.debet}} </p>
-
-  <h5>Учет экскурсионных часов научных сотрудников</h5>
-  <table class="all_tables">
-    <tr>
-      <td><strong>№</strong></td>
-      <td><strong>ФИО работника</strong></td>
-      <td><strong>Часы</strong></td>
-    </tr>
-    {% for person in team %}
-    <tr>
-      <td>{{ loop.index }}</td>
-      <td>{{ person.title }}</td>
-      <td>{{ person.chas_itogo }}</td>
-    </tr>
-    {% endfor %}
-    <tr>
-      <td> </td>
-      <td>ВСЕГО:</td>
-      <td>{{data.vsego_chasov}}</td>
-    </tr>
-  </table>
+      <hr>
+      <p> Отчет сформирован {{data.today}} в {{data.now}} пользователем {{data.user}}</p>
 </div>
