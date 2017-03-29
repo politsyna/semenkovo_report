@@ -23,6 +23,7 @@ class PageItog extends ControllerBase {
     $all_people = [];
     $kolvo_ekskurs = 0;
     $kolvo_meropr = 0;
+    $kolvo_arenda = 0;
     $vsego_people = 0;
     $fakt_cost = [];
     $summ_fakt_cost = 0;
@@ -58,10 +59,22 @@ class PageItog extends ControllerBase {
       'none' => 'Регион неизвестен',
     ];
     $summa_ludey = 0;
+    // Получаем все термины таксономии (типы услуг - 11 штук).
+    $vid = 'type_activity';
+    $terms = \Drupal::service('entity_type.manager')->getStorage("taxonomy_term")->loadTree($vid);
+    $all_programm = [];
+    // Делаем из списка всех терминов массив с нулями (Программа "ХХХ" - 0 шт.).
+    foreach ($terms as $term) {
+      $all_programm[$term->name] = [
+        'name_programm' => $term->name,
+        'summa' => 0,
+      ];
+    }
+    // Самый главный foreach - он здесь делает почти все.
     foreach ($orders as $key => $node) {
       $fieldcollection = $node->field_orders_visitor;
       $fc = Group::collectionItems($fieldcollection);
-      // Делаем из поля "ссылка на команду" массив людейж.
+      // Делаем из поля "ссылка на команду" массив людей.
       $team = $this->getOrdersTeam($node->field_orders_team);
       $node_usluga = $node->field_orders_ref_activity->entity;
       $termin = $node_usluga->field_activity_type->entity;
@@ -76,12 +89,6 @@ class PageItog extends ControllerBase {
       ];
       // Считаем количество проведенных программ.
       $kolvo_programm = 1;
-      if (!isset($all_programm[$name_programm])) {
-        $all_programm[$name_programm] = [
-          'name_programm' => $name_programm,
-          'summa' => 0,
-        ];
-      }
       // 1. Работаем с участком массива $all_programm под названием $name_programm, например, Солнцеворот.
       // 2. Внутри этого участка берем значение из поля 'summa'.
       $current_summa = $all_programm[$name_programm]['summa'];
@@ -102,6 +109,10 @@ class PageItog extends ControllerBase {
       // Определяем общее количество массовых мероприятий.
       if ($name_programm == 'Массовое мероприятие') {
         $kolvo_meropr = $kolvo_meropr + $kolvo_programm;
+      }
+      // Определяем общее количество аренды.
+      if ($name_programm == 'Аренда') {
+        $kolvo_arenda = $kolvo_arenda + $kolvo_programm;
       }
 
       // Считаем общий доход по всем программам: сумма всех "фактическая стоимость".
@@ -335,6 +346,7 @@ class PageItog extends ControllerBase {
     $vsego_oplacheno = 0;
     $oplacheno_ekskurs = 0;
     $oplacheno_meropr = 0;
+    $oplacheno_arenda = 0;
     foreach ($payments as $key => $node_payment) {
       $node_orders = $node_payment->field_payment_ref_orders->entity;
       $node_usluga = $node_orders->field_orders_ref_activity->entity;
@@ -356,6 +368,10 @@ class PageItog extends ControllerBase {
       // Считаем доход по всем программам, относящимся к массовым мероприятиям (сумма всех "оплачено").
       if ($name_programm == 'Массовое мероприятие') {
         $oplacheno_meropr = $oplacheno_meropr + $payment[$id]['oplacheno'];
+      }
+      // Считаем доход по всем программам, относящимся к аренде (сумма всех "оплачено").
+      if ($name_programm == 'Аренда') {
+        $oplacheno_arenda = $oplacheno_arenda + $payment[$id]['oplacheno'];
       }
     }
 
@@ -398,11 +414,11 @@ class PageItog extends ControllerBase {
       // ВСЕ часы в сумме.
       $vsego_chasov = $vsego_chasov + $hours;
     }
-    foreach ($team as $key => $value) {
+    /*foreach ($team as $key => $value) {
       if (!isset($value['chas_itogo'])) {
         unset($team[$key]);
       }
-    }
+    }*/
 
     $uid = \Drupal::currentUser()->id();
     $user = User::load($uid);
@@ -420,6 +436,7 @@ class PageItog extends ControllerBase {
       'vsego_programm' => $vsego_programm,
       'kolvo_ekskurs' => number_format($kolvo_ekskurs, 0, ",", " ") . " шт.",
       'kolvo_meropr' => number_format($kolvo_meropr, 0, ",", " ") . " шт.",
+      'kolvo_arenda' => number_format($kolvo_arenda, 0, ",", " ") . " шт.",
       'vsego_people' => number_format($vsego_people, 0, ",", " ") . " чел.",
       'vsego_people_vhod' => number_format($vsego_peopl_vhod, 0, ",", " ") . " чел.",
       'people_free_vhod' => number_format($people_free_vhod, 0, ",", " ") . " чел.",
@@ -430,6 +447,7 @@ class PageItog extends ControllerBase {
       'oplacheno' => number_format($vsego_oplacheno, 0, ",", " ") . " руб.",
       'oplacheno_ekskurs' => number_format($oplacheno_ekskurs, 0, ",", " ") . " руб.",
       'oplacheno_meropr' => number_format($oplacheno_meropr, 0, ",", " ") . " руб.",
+      'oplacheno_arenda' => number_format($oplacheno_arenda, 0, ",", " ") . " руб.",
       'debet' => number_format($debet, 0, ",", " ") . " руб.",
       'all_kategory' => $visitors_kateg,
       'all_region' => $visitors_reg,

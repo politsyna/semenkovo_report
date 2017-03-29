@@ -18,6 +18,12 @@
         <td>{{ person.title }}</td>
         <td>{{ person.chas_itogo }}</td>
       </tr>
+      {% else %}
+      <tr>
+        <td>{{ loop.index }}</td>
+        <td>{{ person.title }}</td>
+        <td>0</td>
+      </tr>
       {% endif %}
       {% endfor %}
       <tr>
@@ -39,11 +45,19 @@
         <td><strong>Количество</strong></td>
       </tr>
       {% for programm in data.all_programm %}
+      {% if programm.summa %}
       <tr>
         <td>{{ loop.index }}</td>
         <td>{{ programm.name_programm }}</td>
         <td>{{ programm.summa }}</td>
       </tr>
+      {% else %}
+      <tr>
+        <td>{{ loop.index }}</td>
+        <td>{{ programm.name_programm }}</td>
+        <td>0</td>
+      </tr>
+      {% endif %}
       {% endfor %}
       <tr>
         <td> </td>
@@ -83,12 +97,84 @@
       {% endfor %}
       </table>
 
-      <h4>Посещаемость:</h4>
+      <h5>Статистика по посещаемости</h5>
+      <table class="all_tables">
+      <tr>
+        <td>Посещаемость (суммарная)</td>
+        <td>{{data.vsego_people}}</td>
+      </tr>
+      <tr>
+        <td>Посещаемость по входным билетам</td>
+        <td>{{data.vsego_people_vhod}}</td>
+      </tr>
+      <tr>
+        <td>Количество лиц, имеющих право бесплатного посещения</td>
+        <td>{{data.people_free_vhod}}</td>
+      </tr>
+      <tr>
+        <td>Количество экскурсантов</td>
+        <td>{{data.kolvo_people_ekskurs}}</td>
+      </tr>
+      <tr>
+        <td>Количество участников массовых мероприятий</td>
+        <td>{{data.kolvo_people_meropr}}</td>
+      </tr>
+      </table>
+
+      <h5>Финансовая статистика</h5>
+      <table class="all_tables">
+      <tr>
+        <td>Доход по входным билетам</td>
+        <td>{{data.summ_cost_vhod}}</td>
+      </tr>
+      <tr>
+        <td>Доход за экскурсии (оплачено)</td>
+        <td>{{data.oplacheno_ekskurs}}</td>
+      </tr>
+      <tr>
+        <td>Доход за мероприятия (оплачено)</td>
+        <td>{{data.oplacheno_meropr}}</td>
+      </tr>
+      <tr>
+        <td>Доход за аренду (оплачено)</td>
+        <td>{{data.oplacheno_arenda}}</td>
+      </tr>
+      <tr>
+        <td>Доход за все услуги (оплачено)</td>
+        <td>{{data.oplacheno}}</td>
+      </tr>
+      <tr>
+        <td>Стоимость (фактическая) всех оказанных услуг</td>
+        <td>{{data.summ_fakt_cost}}</td>
+      </tr>
+      <tr>
+        <td>Дебет</td>
+        <td>{{data.debet}}</td>
+      </tr>
+      </table>
+
+      <h5>Статистика по услугам</h5>
+      <table class="all_tables">
+      <tr>
+        <td>Количество экскурсий</td>
+        <td>{{data.kolvo_ekskurs}}</td>
+      </tr>
+      <tr>
+        <td>Количество массовых мероприятий</td>
+        <td>{{data.kolvo_meropr}}</td>
+      </tr>
+      <tr>
+        <td>Количество программ типа "Аренда"</td>
+        <td>{{data.kolvo_arenda}}</td>
+      </tr>
+      </table>
+      <hr>
+      <p> Отчет сформирован {{data.today}} в {{data.now}} пользователем {{data.user}}</p>
+
+      {#
+      <h4>Люди:</h4>
       <p> Посещаемость (суммарная) --- {{data.vsego_people}} </p>
       <p> Посещаемость по входным билетам --- {{data.vsego_people_vhod}} </p>
-      <p> Количество экскурсий --- {{data.kolvo_ekskurs}} </p>
-      <p> Количество массовых мероприятий --- {{data.kolvo_meropr}} </p>
-      <h4>Люди:</h4>
       <p> Количество лиц, имеющих право бесплатного посещения --- {{data.people_free_vhod}} </p>
       <p> Количество экскурсантов --- {{data.kolvo_people_ekskurs}} </p>
       <p> Количество участников массовых мероприятий --- {{data.kolvo_people_meropr}} </p>
@@ -96,9 +182,13 @@
       <p> Доход по входным билетам --- {{data.summ_cost_vhod}} </p>
       <p> Доход за экскурсии (оплачено) --- {{data.oplacheno_ekskurs}} </p>
       <p> Доход за мероприятия (оплачено) --- {{data.oplacheno_meropr}} </p>
+      <p> Доход за аренду (оплачено) --- {{data.oplacheno_arenda}} </p>
       <p> Доход за все услуги (оплачено) --- {{data.oplacheno}} </p>
       <p> Стоимость (фактическая) всех оказанных услуг --- {{data.summ_fakt_cost}} </p>
       <p> Дебет --- {{data.debet}} </p>
-      <hr>
-      <p> Отчет сформирован {{data.today}} в {{data.now}} пользователем {{data.user}}</p>
+      <h4>Услуги:</h4>
+      <p> Количество экскурсий --- {{data.kolvo_ekskurs}} </p>
+      <p> Количество массовых мероприятий --- {{data.kolvo_meropr}} </p>
+      <p> Количество программ типа "Аренда" --- {{data.kolvo_arenda}} </p>
+      #}
 </div>
