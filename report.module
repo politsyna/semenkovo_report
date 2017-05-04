@@ -10,13 +10,17 @@
  */
 function report_theme() {
   return [
-    'report-header' => [
-      'template' => 'rep-header',
+    'report-itog' => [
+      'template' => 'rep-itog',
       'variables' => ['data' => []],
     ],
-    'report-table' => [
-      'template' => 'rep-table',
-      'variables' => ['table' => []],
+    'report-exkurs' => [
+      'template' => 'rep-exkurs',
+      'variables' => ['data' => []],
+    ],
+    'report-full' => [
+      'template' => 'rep-full',
+      'variables' => ['data' => []],
     ],
   ];
 }

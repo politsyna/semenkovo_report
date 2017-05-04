@@ -3,7 +3,7 @@
   form
 #}
 {% set team = data.team %}
-<div class="header-report-semenkovo">
+<div class="itog-report-semenkovo">
     <h5>Учет экскурсионных часов научных сотрудников</h5>
     <table class="all_tables">
       <tr>
@@ -34,6 +34,7 @@
     </table>
 
     {{data.ekskurs}}
+    {{data.ekskurs_long}}
     {{data.meropr}}
     {{data.sum}}
 
@@ -116,8 +117,16 @@
         <td>{{data.kolvo_people_ekskurs}}</td>
       </tr>
       <tr>
+        <td>Количество экскурсантов в человеко-часах</td>
+        <td>{{data.kolvo_people_ekskurs_long}}</td>
+      </tr>
+      <tr>
         <td>Количество участников массовых мероприятий</td>
         <td>{{data.kolvo_people_meropr}}</td>
+      </tr>
+      <tr>
+        <td>Количество участников мероприятий типа "Аренда"</td>
+        <td>{{data.kolvo_people_arenda}}</td>
       </tr>
       </table>
 
@@ -132,7 +141,7 @@
         <td>{{data.oplacheno_ekskurs}}</td>
       </tr>
       <tr>
-        <td>Доход за мероприятия (оплачено)</td>
+        <td>Доход за массовые мероприятия (оплачено)</td>
         <td>{{data.oplacheno_meropr}}</td>
       </tr>
       <tr>
@@ -158,14 +167,17 @@
       <tr>
         <td>Количество экскурсий</td>
         <td>{{data.kolvo_ekskurs}}</td>
+        <td>{{data.kolvo_ekskurs_long}}</td>
       </tr>
       <tr>
         <td>Количество массовых мероприятий</td>
         <td>{{data.kolvo_meropr}}</td>
+        <td>{{data.kolvo_meropr_long}}</td>
       </tr>
       <tr>
         <td>Количество программ типа "Аренда"</td>
         <td>{{data.kolvo_arenda}}</td>
+        <td>{{data.kolvo_arenda_long}}</td>
       </tr>
       </table>
       <hr>

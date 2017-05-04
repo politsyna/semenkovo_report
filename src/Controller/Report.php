@@ -31,7 +31,10 @@ class Report extends ControllerBase {
       $output .= format_date($i, 'custom', 'Общий отчет за M Y');
       $output .= '</a><br>';
       $output .= '<a href="/report/exp/' . $month_last . '/' . $month_next . '">';
-      $output .= format_date($i, 'custom', 'Расширенный отчет за M Y');
+      $output .= format_date($i, 'custom', 'Экскурсионный отчет за M Y');
+      $output .= '</a><br>';
+      $output .= '<a href="/report/full/' . $month_last . '/' . $month_next . '">';
+      $output .= format_date($i, 'custom', 'Полный отчет за M Y');
       $output .= '</a>';
     // $output .= ' ' . $month_last . '-- ' . $month_next;
       $output .= '</li>';

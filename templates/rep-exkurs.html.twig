@@ -1,0 +1,478 @@
+{#
+  submission
+  form
+#}
+{% set team = data.team %}
+<div class="exkurs-report-semenkovo">
+    <h5>Учет экскурсионных часов научных сотрудников</h5>
+    <table class="all_tables">
+      <tr>
+        <td><strong>№</strong></td>
+        <td><strong>ФИО работника</strong></td>
+        <td><strong>Часы</strong></td>
+      </tr>
+      {% for person in team %}
+      {% if person.chas_itogo %}
+      <tr>
+        <td>{{ loop.index }}</td>
+        <td>{{ person.title }}</td>
+        <td>{{ person.chas_itogo }}</td>
+      </tr>
+      {% else %}
+      <tr>
+        <td>{{ loop.index }}</td>
+        <td>{{ person.title }}</td>
+        <td>0</td>
+      </tr>
+      {% endif %}
+      {% endfor %}
+      <tr>
+        <td> </td>
+        <td>ВСЕГО:</td>
+        <td>{{data.vsego_chasov}}</td>
+      </tr>
+    </table>
+
+    {% set a1 = data.ekskurs['#rows'][0][1] %}
+    {% set b1 = data.ekskurs['#rows'][0][2] %}
+    {% set v1 = data.ekskurs['#rows'][0][3] %}
+    {% set g1 = data.ekskurs['#rows'][0][4] %}
+    {% set d1 = data.ekskurs['#rows'][0][5] %}
+    {% set a2 = data.ekskurs['#rows'][1][1] %}
+    {% set b2 = data.ekskurs['#rows'][1][2] %}
+    {% set v2 = data.ekskurs['#rows'][1][3] %}
+    {% set g2 = data.ekskurs['#rows'][1][4] %}
+    {% set d2 = data.ekskurs['#rows'][1][5] %}
+    {% set a3 = data.ekskurs['#rows'][2][1] %}
+    {% set b3 = data.ekskurs['#rows'][2][2] %}
+    {% set v3 = data.ekskurs['#rows'][2][3] %}
+    {% set g3 = data.ekskurs['#rows'][2][4] %}
+    {% set d3 = data.ekskurs['#rows'][2][5] %}
+    {% set a4 = data.ekskurs['#rows'][3][1] %}
+    {% set b4 = data.ekskurs['#rows'][3][2] %}
+    {% set v4 = data.ekskurs['#rows'][3][3] %}
+    {% set g4 = data.ekskurs['#rows'][3][4] %}
+    {% set d4 = data.ekskurs['#rows'][3][5] %}
+    {% set a5 = data.ekskurs['#rows'][4][1] %}
+    {% set b5 = data.ekskurs['#rows'][4][2] %}
+    {% set v5 = data.ekskurs['#rows'][4][3] %}
+    {% set g5 = data.ekskurs['#rows'][4][4] %}
+    {% set d5 = data.ekskurs['#rows'][4][5] %}
+    {% set a6 = data.ekskurs['#rows'][5][1] %}
+    {% set b6 = data.ekskurs['#rows'][5][2] %}
+    {% set v6 = data.ekskurs['#rows'][5][3] %}
+    {% set g6 = data.ekskurs['#rows'][5][4] %}
+    {% set d6 = data.ekskurs['#rows'][5][5] %}
+    {% set a7 = data.ekskurs['#rows'][6][1] %}
+    {% set b7 = data.ekskurs['#rows'][6][2] %}
+    {% set v7 = data.ekskurs['#rows'][6][3] %}
+    {% set g7 = data.ekskurs['#rows'][6][4] %}
+    {% set d7 = data.ekskurs['#rows'][6][5] %}
+    {% set a8 = data.ekskurs['#rows'][7][1] %}
+    {% set b8 = data.ekskurs['#rows'][7][2] %}
+    {% set v8 = data.ekskurs['#rows'][7][3] %}
+    {% set g8 = data.ekskurs['#rows'][7][4] %}
+    {% set d8 = data.ekskurs['#rows'][7][5] %}
+    {% set a9 = data.ekskurs['#rows'][8][1] %}
+    {% set b9 = data.ekskurs['#rows'][8][2] %}
+    {% set v9 = data.ekskurs['#rows'][8][3] %}
+    {% set g9 = data.ekskurs['#rows'][8][4] %}
+    {% set d9 = data.ekskurs['#rows'][8][5] %}
+
+    <h5>Категории посетителей экскурсий</h5>
+    <table class="all_tables">
+      <tr>
+        <td>Школьники города Вологды, человеко-час</td>
+        <td>{{a3}}</td>
+      </tr>
+      <tr>
+        <td>Школьники Вологодской области, человеко-час</td>
+        <td>{{b3}}</td>
+      </tr>
+      <tr>
+        <td>Школьники других регионов, человеко-час</td>
+        <td>{{v3 + d3}}</td>
+      </tr>
+      <tr>
+        <td>Студенты, человеко-час</td>
+        <td>{{a2 + b2 + v2 + d2}}</td>
+      </tr>
+      <tr>
+        <td>Дошкольники, человеко-час</td>
+        <td>{{a4 + b4 + v4 + d4}}</td>
+      </tr>
+      <tr>
+        <td>Пенсионеры, человеко-час</td>
+        <td>{{a5 + b5 + v5 + d5}}</td>
+      </tr>
+      <tr>
+        <td>Взрослые, человеко-час</td>
+        <td>{{a1 + b1}}</td>
+      </tr>
+      <tr>
+        <td>Туристы, человеко-час</td>
+        <td>{{v1}}</td>
+      </tr>
+      <tr>
+        <td>Военнослужащие, человеко-час</td>
+        <td>{{a6 + b6 + v6 + d6}}</td>
+      </tr>
+      <tr>
+        <td>Гости, человеко-час</td>
+        <td>{{a9 + b9 + v9 + g9 + d9}}</td>
+      </tr>
+      <tr>
+        <td>Иностранцы, человеко-час</td>
+        <td>{{g1 + g2 + g3 + g4 + g5 + g6 + g7 + g8}}</td>
+      </tr>
+      <tr>
+        <td>Льготники, человеко-час</td>
+        <td>{{a8 + b8 + v8 + d8}}</td>
+      </tr>
+    </table>
+
+    {% set a1 = data.meropr['#rows'][0][1] %}
+    {% set b1 = data.meropr['#rows'][0][2] %}
+    {% set v1 = data.meropr['#rows'][0][3] %}
+    {% set g1 = data.meropr['#rows'][0][4] %}
+    {% set d1 = data.meropr['#rows'][0][5] %}
+    {% set a2 = data.meropr['#rows'][1][1] %}
+    {% set b2 = data.meropr['#rows'][1][2] %}
+    {% set v2 = data.meropr['#rows'][1][3] %}
+    {% set g2 = data.meropr['#rows'][1][4] %}
+    {% set d2 = data.meropr['#rows'][1][5] %}
+    {% set a3 = data.meropr['#rows'][2][1] %}
+    {% set b3 = data.meropr['#rows'][2][2] %}
+    {% set v3 = data.meropr['#rows'][2][3] %}
+    {% set g3 = data.meropr['#rows'][2][4] %}
+    {% set d3 = data.meropr['#rows'][2][5] %}
+    {% set a4 = data.meropr['#rows'][3][1] %}
+    {% set b4 = data.meropr['#rows'][3][2] %}
+    {% set v4 = data.meropr['#rows'][3][3] %}
+    {% set g4 = data.meropr['#rows'][3][4] %}
+    {% set d4 = data.meropr['#rows'][3][5] %}
+    {% set a5 = data.meropr['#rows'][4][1] %}
+    {% set b5 = data.meropr['#rows'][4][2] %}
+    {% set v5 = data.meropr['#rows'][4][3] %}
+    {% set g5 = data.meropr['#rows'][4][4] %}
+    {% set d5 = data.meropr['#rows'][4][5] %}
+    {% set a6 = data.meropr['#rows'][5][1] %}
+    {% set b6 = data.meropr['#rows'][5][2] %}
+    {% set v6 = data.meropr['#rows'][5][3] %}
+    {% set g6 = data.meropr['#rows'][5][4] %}
+    {% set d6 = data.meropr['#rows'][5][5] %}
+    {% set a7 = data.meropr['#rows'][6][1] %}
+    {% set b7 = data.meropr['#rows'][6][2] %}
+    {% set v7 = data.meropr['#rows'][6][3] %}
+    {% set g7 = data.meropr['#rows'][6][4] %}
+    {% set d7 = data.meropr['#rows'][6][5] %}
+    {% set a8 = data.meropr['#rows'][7][1] %}
+    {% set b8 = data.meropr['#rows'][7][2] %}
+    {% set v8 = data.meropr['#rows'][7][3] %}
+    {% set g8 = data.meropr['#rows'][7][4] %}
+    {% set d8 = data.meropr['#rows'][7][5] %}
+    {% set a9 = data.meropr['#rows'][8][1] %}
+    {% set b9 = data.meropr['#rows'][8][2] %}
+    {% set v9 = data.meropr['#rows'][8][3] %}
+    {% set g9 = data.meropr['#rows'][8][4] %}
+    {% set d9 = data.meropr['#rows'][8][5] %}
+
+    <h5>Категории посетителей массовых мероприятий</h5>
+    <table class="all_tables">
+      <tr>
+        <td>Школьники города Вологды, человеко-час</td>
+        <td>{{a3}}</td>
+      </tr>
+      <tr>
+        <td>Школьники Вологодской области, человеко-час</td>
+        <td>{{b3}}</td>
+      </tr>
+      <tr>
+        <td>Школьники других регионов, человеко-час</td>
+        <td>{{v3 + d3}}</td>
+      </tr>
+      <tr>
+        <td>Студенты, человеко-час</td>
+        <td>{{a2 + b2 + v2 + d2}}</td>
+      </tr>
+      <tr>
+        <td>Дошкольники, человеко-час</td>
+        <td>{{a4 + b4 + v4 + d4}}</td>
+      </tr>
+      <tr>
+        <td>Пенсионеры, человеко-час</td>
+        <td>{{a5 + b5 + v5 + d5}}</td>
+      </tr>
+      <tr>
+        <td>Взрослые, человеко-час</td>
+        <td>{{a1 + b1}}</td>
+      </tr>
+      <tr>
+        <td>Туристы, человеко-час</td>
+        <td>{{v1}}</td>
+      </tr>
+      <tr>
+        <td>Военнослужащие, человеко-час</td>
+        <td>{{a6 + b6 + v6 + d6}}</td>
+      </tr>
+      <tr>
+        <td>Гости, человеко-час</td>
+        <td>{{a9 + b9 + v9 + g9 + d9}}</td>
+      </tr>
+      <tr>
+        <td>Иностранцы, человеко-час</td>
+        <td>{{g1 + g2 + g3 + g4 + g5 + g6 + g7 + g8}}</td>
+      </tr>
+      <tr>
+        <td>Льготники, человеко-час</td>
+        <td>{{a8 + b8 + v8 + d8}}</td>
+      </tr>
+    </table>
+
+    {% set a1 = data.sum['#rows'][0][1] %}
+    {% set b1 = data.sum['#rows'][0][2] %}
+    {% set v1 = data.sum['#rows'][0][3] %}
+    {% set g1 = data.sum['#rows'][0][4] %}
+    {% set d1 = data.sum['#rows'][0][5] %}
+    {% set a2 = data.sum['#rows'][1][1] %}
+    {% set b2 = data.sum['#rows'][1][2] %}
+    {% set v2 = data.sum['#rows'][1][3] %}
+    {% set g2 = data.sum['#rows'][1][4] %}
+    {% set d2 = data.sum['#rows'][1][5] %}
+    {% set a3 = data.sum['#rows'][2][1] %}
+    {% set b3 = data.sum['#rows'][2][2] %}
+    {% set v3 = data.sum['#rows'][2][3] %}
+    {% set g3 = data.sum['#rows'][2][4] %}
+    {% set d3 = data.sum['#rows'][2][5] %}
+    {% set a4 = data.sum['#rows'][3][1] %}
+    {% set b4 = data.sum['#rows'][3][2] %}
+    {% set v4 = data.sum['#rows'][3][3] %}
+    {% set g4 = data.sum['#rows'][3][4] %}
+    {% set d4 = data.sum['#rows'][3][5] %}
+    {% set a5 = data.sum['#rows'][4][1] %}
+    {% set b5 = data.sum['#rows'][4][2] %}
+    {% set v5 = data.sum['#rows'][4][3] %}
+    {% set g5 = data.sum['#rows'][4][4] %}
+    {% set d5 = data.sum['#rows'][4][5] %}
+    {% set a6 = data.sum['#rows'][5][1] %}
+    {% set b6 = data.sum['#rows'][5][2] %}
+    {% set v6 = data.sum['#rows'][5][3] %}
+    {% set g6 = data.sum['#rows'][5][4] %}
+    {% set d6 = data.sum['#rows'][5][5] %}
+    {% set a7 = data.sum['#rows'][6][1] %}
+    {% set b7 = data.sum['#rows'][6][2] %}
+    {% set v7 = data.sum['#rows'][6][3] %}
+    {% set g7 = data.sum['#rows'][6][4] %}
+    {% set d7 = data.sum['#rows'][6][5] %}
+    {% set a8 = data.sum['#rows'][7][1] %}
+    {% set b8 = data.sum['#rows'][7][2] %}
+    {% set v8 = data.sum['#rows'][7][3] %}
+    {% set g8 = data.sum['#rows'][7][4] %}
+    {% set d8 = data.sum['#rows'][7][5] %}
+    {% set a9 = data.sum['#rows'][8][1] %}
+    {% set b9 = data.sum['#rows'][8][2] %}
+    {% set v9 = data.sum['#rows'][8][3] %}
+    {% set g9 = data.sum['#rows'][8][4] %}
+    {% set d9 = data.sum['#rows'][8][5] %}
+
+    <h5>Категории посетителей (сводная)</h5>
+    <table class="all_tables">
+      <tr>
+        <td>Школьники города Вологды, человеко-час</td>
+        <td>{{a3}}</td>
+      </tr>
+      <tr>
+        <td>Школьники Вологодской области, человеко-час</td>
+        <td>{{b3}}</td>
+      </tr>
+      <tr>
+        <td>Школьники других регионов, человеко-час</td>
+        <td>{{v3 + d3}}</td>
+      </tr>
+      <tr>
+        <td>Студенты, человеко-час</td>
+        <td>{{a2 + b2 + v2 + d2}}</td>
+      </tr>
+      <tr>
+        <td>Дошкольники, человеко-час</td>
+        <td>{{a4 + b4 + v4 + d4}}</td>
+      </tr>
+      <tr>
+        <td>Пенсионеры, человеко-час</td>
+        <td>{{a5 + b5 + v5 + d5}}</td>
+      </tr>
+      <tr>
+        <td>Взрослые, человеко-час</td>
+        <td>{{a1 + b1}}</td>
+      </tr>
+      <tr>
+        <td>Туристы, человеко-час</td>
+        <td>{{v1}}</td>
+      </tr>
+      <tr>
+        <td>Военнослужащие, человеко-час</td>
+        <td>{{a6 + b6 + v6 + d6}}</td>
+      </tr>
+      <tr>
+        <td>Гости, человеко-час</td>
+        <td>{{a9 + b9 + v9 + g9 + d9}}</td>
+      </tr>
+      <tr>
+        <td>Иностранцы, человеко-час</td>
+        <td>{{g1 + g2 + g3 + g4 + g5 + g6 + g7 + g8}}</td>
+      </tr>
+      <tr>
+        <td>Льготники, человеко-час</td>
+        <td>{{a8 + b8 + v8 + d8}}</td>
+      </tr>
+    </table>
+
+    <h5>Учет музейных услуг</h5>
+    <table class="all_tables">
+      <tr>
+        <td><strong>№</strong></td>
+        <td><strong>Тип программы</strong></td>
+        <td><strong>Количество</strong></td>
+      </tr>
+      {% for programm in data.all_programm %}
+      {% if programm.summa %}
+      <tr>
+        <td>{{ loop.index }}</td>
+        <td>{{ programm.name_programm }}</td>
+        <td>{{ programm.summa }}</td>
+      </tr>
+      {% else %}
+      <tr>
+        <td>{{ loop.index }}</td>
+        <td>{{ programm.name_programm }}</td>
+        <td>0</td>
+      </tr>
+      {% endif %}
+      {% endfor %}
+      <tr>
+        <td> </td>
+        <td>ВСЕГО:</td>
+        <td>{{data.vsego_programm}}</td>
+      </tr>
+      </table>
+
+      <h5>Учет посетителей по категориям</h5>
+      <table class="all_tables">
+      <tr>
+        <td><strong>№</strong></td>
+        <td><strong>Категория посетителей</strong></td>
+        <td><strong>Количество людей</strong></td>
+      </tr>
+      {% for kategory in data.all_kategory %}
+      <tr>
+        <td>{{ loop.index }}</td>
+        <td>{{ kategory.key }}</td>
+        <td>{{ kategory.sum }}</td>
+      </tr>
+      {% endfor %}
+      </table>
+      <h5>Учет посетителей по регионам</h5>
+      <table class="all_tables">
+      <tr>
+        <td><strong>№</strong></td>
+        <td><strong>Регионы посетителей</strong></td>
+        <td><strong>Количество людей</strong></td>
+      </tr>
+      {% for region in data.all_region %}
+      <tr>
+        <td>{{ loop.index }}</td>
+        <td>{{ region.key }}</td>
+        <td>{{ region.sum }}</td>
+      </tr>
+      {% endfor %}
+      </table>
+
+      <h5>Статистика по посещаемости</h5>
+      <table class="all_tables">
+      <tr>
+        <td>Посещаемость по входным билетам, человек</td>
+        <td>{{data.vsego_people_vhod|number_format(0, '.', ' ')}}</td>
+      </tr>
+      <tr>
+        <td>Количество экскурсантов, человеко-час</td>
+        <td>{{data.kolvo_people_ekskurs_long|number_format(0, '.', ' ')}}</td>
+      </tr>
+      <tr>
+        <td>Количество участников массовых мероприятий, человек</td>
+        <td>{{data.kolvo_people_meropr|number_format(0, '.', ' ')}}</td>
+      </tr>
+      <tr>
+        <td>Количество посетителей, имеющих право на бесплатное посещение, человек</td>
+        <td>{{data.people_free_vhod|number_format(0, '.', ' ')}}</td>
+      </tr>
+      {% set summa = data.vsego_people_vhod + data.kolvo_people_ekskurs_long
+      + data.kolvo_people_meropr + data.people_free_vhod %}
+      <tr>
+        <td>Общая посещаемость</td>
+        <td>{{summa|number_format(0, '.', ' ')}}</td>
+      </tr>
+      </table>
+
+      <h5>Статистика по финансам</h5>
+      <table class="all_tables">
+      <tr>
+        <td>Доход по билетам, рублей</td>
+        <td>{{data.summ_cost_vhod|number_format(0, '.', ' ')}}</td>
+      </tr>
+      <tr>
+        <td>Доход за экскурсии, рублей</td>
+        <td>{{data.oplacheno_ekskurs|number_format(0, '.', ' ')}}</td>
+      </tr>
+      <tr>
+        <td>Доход за массовые мероприятия, рублей</td>
+        <td>{{data.oplacheno_meropr|number_format(0, '.', ' ')}}</td>
+      </tr>
+      <tr>
+        <td>Доход от аренды, рублей</td>
+        <td>{{data.oplacheno_arenda|number_format(0, '.', ' ')}}</td>
+      </tr>
+      <tr>
+        <td>Общий доход, рублей</td>
+        <td>{{data.oplacheno|number_format(0, '.', ' ')}}</td>
+      </tr>
+      </table>
+
+      <h5>Статистика по услугам</h5>
+      <table class="all_tables">
+      <tr>
+        <td>Количество экскурсий, часов</td>
+        <td>{{data.kolvo_ekskurs_long|number_format(0, '.', ' ')}}</td>
+      </tr>
+      <tr>
+        <td>Количество массовых мероприятий, штук</td>
+        <td>{{data.kolvo_meropr|number_format(0, '.', ' ')}}</td>
+      </tr>
+      <tr>
+        <td>Количество программ типа "Аренда", штук</td>
+        <td>{{data.kolvo_arenda|number_format(0, '.', ' ')}}</td>
+      </tr>
+      </table>
+      <hr>
+      <p> Отчет сформирован {{data.today}} в {{data.now}} пользователем {{data.user}}</p>
+
+      {#
+      <h4>Люди:</h4>
+      <p> Посещаемость (суммарная) --- {{data.vsego_people}} </p>
+      <p> Посещаемость по входным билетам --- {{data.vsego_people_vhod}} </p>
+      <p> Количество лиц, имеющих право бесплатного посещения --- {{data.people_free_vhod}} </p>
+      <p> Количество экскурсантов --- {{data.kolvo_people_ekskurs}} </p>
+      <p> Количество участников массовых мероприятий --- {{data.kolvo_people_meropr}} </p>
+      <h4>Деньги:</h4>
+      <p> Доход по входным билетам --- {{data.summ_cost_vhod}} </p>
+      <p> Доход за экскурсии (оплачено) --- {{data.oplacheno_ekskurs}} </p>
+      <p> Доход за мероприятия (оплачено) --- {{data.oplacheno_meropr}} </p>
+      <p> Доход за аренду (оплачено) --- {{data.oplacheno_arenda}} </p>
+      <p> Доход за все услуги (оплачено) --- {{data.oplacheno}} </p>
+      <p> Стоимость (фактическая) всех оказанных услуг --- {{data.summ_fakt_cost}} </p>
+      <p> Дебет --- {{data.debet}} </p>
+      <h4>Услуги:</h4>
+      <p> Количество экскурсий --- {{data.kolvo_ekskurs}} </p>
+      <p> Количество массовых мероприятий --- {{data.kolvo_meropr}} </p>
+      <p> Количество программ типа "Аренда" --- {{data.kolvo_arenda}} </p>
+      #}
+</div>

@@ -14,8 +14,15 @@ page_itog:
     _permission: 'access report-form'
 
 page_exp:
-  path: 'report/exp/{start}/{end}'
+  path: 'report/exkurs/{start}/{end}'
   defaults:
-    _controller: '\Drupal\report\Controller\PageExp::report'
+    _controller: '\Drupal\report\Controller\PageExkurs::report'
+  requirements:
+    _permission: 'access report-form'
+
+page_full:
+  path: 'report/full/{start}/{end}'
+  defaults:
+    _controller: '\Drupal\report\Controller\PageFull::report'
   requirements:
     _permission: 'access report-form'

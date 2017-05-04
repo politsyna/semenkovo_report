@@ -3,13 +3,14 @@
 namespace Drupal\report\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\node\Entity\Node;
 use Drupal\node_orders\Controller\Group;
 use Drupal\user\Entity\User;
 
 /**
  * Controller routines for page example routes.
  */
-class PageItog extends ControllerBase {
+class PageFull extends ControllerBase {
 
   /**
    * A more complex _controller callback that takes arguments.
@@ -22,7 +23,7 @@ class PageItog extends ControllerBase {
         '#markup' => 'Введите корректные даты отчетного периода.',
       ];
     }
-    $orders = Helper::getOrders($start, $end);
+    $orders = $this->getOrders($start, $end);
     $source = [];
     $all_programm = [];
     $vsego_programm = 0;
@@ -89,7 +90,7 @@ class PageItog extends ControllerBase {
       $fieldcollection = $node->field_orders_visitor;
       $fc = Group::collectionItems($fieldcollection);
       // Делаем из поля "ссылка на команду" массив людей.
-      $team = Helper::getOrdersTeam($node->field_orders_team);
+      $team = $this->getOrdersTeam($node->field_orders_team);
       $node_usluga = $node->field_orders_ref_activity->entity;
       $termin = $node_usluga->field_activity_type->entity;
       $activity_long = $node_usluga->field_activity_long_time->value;
@@ -242,7 +243,6 @@ class PageItog extends ControllerBase {
             $visitors_vol[$kategoria]['sum'] = 0;
             $visitors_vol[$kategoria]['key'] = $kategoria;
             $visitors_vol[$kategoria]['ekskurs'] = 0;
-            $visitors_vol[$kategoria]['ekskurs_long'] = 0;
             $visitors_vol[$kategoria]['meropr'] = 0;
 
           }
@@ -251,8 +251,6 @@ class PageItog extends ControllerBase {
           $name_programm == 'Туристический поезд' || $name_programm == 'Экологическая программа' ||
           $name_programm == 'Экскурсионное обслуживание') {
             $visitors_vol[$kategoria]['ekskurs'] = $visitors_vol[$kategoria]['ekskurs'] + $kolvo_po_kateg;
-            $visitors_vol[$kategoria]['ekskurs_long'] = $visitors_vol[$kategoria]['ekskurs_long']
-            + $kolvo_po_kateg * $activity_long;
           }
           elseif ($name_programm == 'Массовое мероприятие') {
             $visitors_vol[$kategoria]['meropr'] = $visitors_vol[$kategoria]['meropr'] + $kolvo_po_kateg;
@@ -274,7 +272,6 @@ class PageItog extends ControllerBase {
             $visitors_volobl[$kategoria]['sum'] = 0;
             $visitors_volobl[$kategoria]['key'] = $kategoria;
             $visitors_volobl[$kategoria]['ekskurs'] = 0;
-            $visitors_volobl[$kategoria]['ekskurs_long'] = 0;
             $visitors_volobl[$kategoria]['meropr'] = 0;
           }
           if ($name_programm == 'Игровые мероприятия' || $name_programm == 'Мастер-класс' ||
@@ -282,8 +279,6 @@ class PageItog extends ControllerBase {
           $name_programm == 'Туристический поезд' || $name_programm == 'Экологическая программа' ||
           $name_programm == 'Экскурсионное обслуживание') {
             $visitors_volobl[$kategoria]['ekskurs'] = $visitors_volobl[$kategoria]['ekskurs'] + $kolvo_po_kateg;
-            $visitors_volobl[$kategoria]['ekskurs_long'] = $visitors_volobl[$kategoria]['ekskurs_long']
-            + $kolvo_po_kateg * $activity_long;
           }
           elseif ($name_programm == 'Массовое мероприятие') {
             $visitors_volobl[$kategoria]['meropr'] = $visitors_volobl[$kategoria]['meropr'] + $kolvo_po_kateg;
@@ -305,7 +300,6 @@ class PageItog extends ControllerBase {
             $visitors_russia[$kategoria]['sum'] = 0;
             $visitors_russia[$kategoria]['key'] = $kategoria;
             $visitors_russia[$kategoria]['ekskurs'] = 0;
-            $visitors_russia[$kategoria]['ekskurs_long'] = 0;
             $visitors_russia[$kategoria]['meropr'] = 0;
           }
           if ($name_programm == 'Игровые мероприятия' || $name_programm == 'Мастер-класс' ||
@@ -313,8 +307,6 @@ class PageItog extends ControllerBase {
           $name_programm == 'Туристический поезд' || $name_programm == 'Экологическая программа' ||
           $name_programm == 'Экскурсионное обслуживание') {
             $visitors_russia[$kategoria]['ekskurs'] = $visitors_russia[$kategoria]['ekskurs'] + $kolvo_po_kateg;
-            $visitors_russia[$kategoria]['ekskurs_long'] = $visitors_russia[$kategoria]['ekskurs_long']
-            + $kolvo_po_kateg * $activity_long;
           }
           elseif ($name_programm == 'Массовое мероприятие') {
             $visitors_russia[$kategoria]['meropr'] = $visitors_russia[$kategoria]['meropr'] + $kolvo_po_kateg;
@@ -336,7 +328,6 @@ class PageItog extends ControllerBase {
             $visitors_another[$kategoria]['sum'] = 0;
             $visitors_another[$kategoria]['key'] = $kategoria;
             $visitors_another[$kategoria]['ekskurs'] = 0;
-            $visitors_another[$kategoria]['ekskurs_long'] = 0;
             $visitors_another[$kategoria]['meropr'] = 0;
           }
           if ($name_programm == 'Игровые мероприятия' || $name_programm == 'Мастер-класс' ||
@@ -344,8 +335,6 @@ class PageItog extends ControllerBase {
           $name_programm == 'Туристический поезд' || $name_programm == 'Экологическая программа' ||
           $name_programm == 'Экскурсионное обслуживание') {
             $visitors_another[$kategoria]['ekskurs'] = $visitors_another[$kategoria]['ekskurs'] + $kolvo_po_kateg;
-            $visitors_another[$kategoria]['ekskurs_long'] = $visitors_another[$kategoria]['ekskurs_long']
-            + $kolvo_po_kateg * $activity_long;
           }
           elseif ($name_programm == 'Массовое мероприятие') {
             $visitors_another[$kategoria]['meropr'] = $visitors_another[$kategoria]['meropr'] + $kolvo_po_kateg;
@@ -367,7 +356,6 @@ class PageItog extends ControllerBase {
             $visitors_none[$kategoria]['sum'] = 0;
             $visitors_none[$kategoria]['key'] = $kategoria;
             $visitors_none[$kategoria]['ekskurs'] = 0;
-            $visitors_none[$kategoria]['ekskurs_long'] = 0;
             $visitors_none[$kategoria]['meropr'] = 0;
           }
           if ($name_programm == 'Игровые мероприятия' || $name_programm == 'Мастер-класс' ||
@@ -375,8 +363,6 @@ class PageItog extends ControllerBase {
           $name_programm == 'Туристический поезд' || $name_programm == 'Экологическая программа' ||
           $name_programm == 'Экскурсионное обслуживание') {
             $visitors_none[$kategoria]['ekskurs'] = $visitors_none[$kategoria]['ekskurs'] + $kolvo_po_kateg;
-            $visitors_none[$kategoria]['ekskurs_long'] = $visitors_none[$kategoria]['ekskurs_long']
-            + $kolvo_po_kateg * $activity_long;
           }
           elseif ($name_programm == 'Массовое мероприятие') {
             $visitors_none[$kategoria]['meropr'] = $visitors_none[$kategoria]['meropr'] + $kolvo_po_kateg;
@@ -393,39 +379,37 @@ class PageItog extends ControllerBase {
 
     // Считаем общий доход по всем программам: сумма всех "оплачено".
     $nids = array_keys($orders);
-    $payments = Helper::getPayment($nids);
+    $payments = $this->getPayment($nids);
     $payment = [];
     $vsego_oplacheno = 0;
     $oplacheno_ekskurs = 0;
     $oplacheno_meropr = 0;
     $oplacheno_arenda = 0;
-    if ($payments) {
-      foreach ($payments as $key => $node_payment) {
-        $node_orders = $node_payment->field_payment_ref_orders->entity;
-        $node_usluga = $node_orders->field_orders_ref_activity->entity;
-        $termin = $node_usluga->field_activity_type->entity;
-        $name_programm = $termin->name->value;
-        $id = $node_payment->id();
-        $payment[$id] = [
-          'oplacheno' => $node_payment->field_payment_summa->value,
-        ];
-        $vsego_oplacheno = $vsego_oplacheno + $payment[$id]['oplacheno'];
+    foreach ($payments as $key => $node_payment) {
+      $node_orders = $node_payment->field_payment_ref_orders->entity;
+      $node_usluga = $node_orders->field_orders_ref_activity->entity;
+      $termin = $node_usluga->field_activity_type->entity;
+      $name_programm = $termin->name->value;
+      $id = $node_payment->id();
+      $payment[$id] = [
+        'oplacheno' => $node_payment->field_payment_summa->value,
+      ];
+      $vsego_oplacheno = $vsego_oplacheno + $payment[$id]['oplacheno'];
 
-        // Считаем доход по всем программам, относящимся к экскурсиям (сумма всех "оплачено").
-        if ($name_programm == 'Игровые мероприятия' || $name_programm == 'Мастер-класс' ||
-        $name_programm == 'Один день из жизни деревни' || $name_programm == 'Солнцеворот' ||
-        $name_programm == 'Туристический поезд' || $name_programm == 'Экологическая программа' ||
-        $name_programm == 'Экскурсионное обслуживание') {
-          $oplacheno_ekskurs = $oplacheno_ekskurs + $payment[$id]['oplacheno'];
-        }
-        // Считаем доход по всем программам, относящимся к массовым мероприятиям (сумма всех "оплачено").
-        if ($name_programm == 'Массовое мероприятие') {
-          $oplacheno_meropr = $oplacheno_meropr + $payment[$id]['oplacheno'];
-        }
-        // Считаем доход по всем программам, относящимся к аренде (сумма всех "оплачено").
-        if ($name_programm == 'Аренда') {
-          $oplacheno_arenda = $oplacheno_arenda + $payment[$id]['oplacheno'];
-        }
+      // Считаем доход по всем программам, относящимся к экскурсиям (сумма всех "оплачено").
+      if ($name_programm == 'Игровые мероприятия' || $name_programm == 'Мастер-класс' ||
+      $name_programm == 'Один день из жизни деревни' || $name_programm == 'Солнцеворот' ||
+      $name_programm == 'Туристический поезд' || $name_programm == 'Экологическая программа' ||
+      $name_programm == 'Экскурсионное обслуживание') {
+        $oplacheno_ekskurs = $oplacheno_ekskurs + $payment[$id]['oplacheno'];
+      }
+      // Считаем доход по всем программам, относящимся к массовым мероприятиям (сумма всех "оплачено").
+      if ($name_programm == 'Массовое мероприятие') {
+        $oplacheno_meropr = $oplacheno_meropr + $payment[$id]['oplacheno'];
+      }
+      // Считаем доход по всем программам, относящимся к аренде (сумма всех "оплачено").
+      if ($name_programm == 'Аренда') {
+        $oplacheno_arenda = $oplacheno_arenda + $payment[$id]['oplacheno'];
       }
     }
 
@@ -433,7 +417,7 @@ class PageItog extends ControllerBase {
     $debet = $summ_fakt_cost - $vsego_oplacheno;
 
     // Получаем ФИО работника и отработанные им часы.
-    $teams = Helper::getTeam();
+    $teams = $this->getTeam();
     $team = [];
     foreach ($teams as $key => $node_team) {
       $id = $node_team->id();
@@ -449,25 +433,24 @@ class PageItog extends ControllerBase {
       'status' => "Внештатный",
     ];
 
-    $exhour = Helper::getExhour($nids);
+    $exhour = $this->getExhour($nids);
     $vsego_chasov = 0;
-    if ($exhour) {
-      foreach ($exhour as $key => $node_exhour) {
-        $tid = $node_exhour->field_exhour_team->entity->id();
-        $hours = $node_exhour->field_exhour_hours->value;
-        if (isset($team[$tid]['status']) && $team[$tid]['status'] == "Штатный") {
-        }
-        else {
-          $tid = 'o';
-        }
-        if (!isset($team[$tid]['chas_itogo'])) {
-          $team[$tid]['chas'][] = $hours;
-          $team[$tid]['chas_itogo'] = 0;
-        }
-        $team[$tid]['chas_itogo'] = $team[$tid]['chas_itogo'] + $hours;
-        // ВСЕ часы в сумме.
-        $vsego_chasov = $vsego_chasov + $hours;
+    foreach ($exhour as $key => $node_exhour) {
+      $tid = $node_exhour->field_exhour_team->entity->id();
+      $hours = $node_exhour->field_exhour_hours->value;
+      if (isset($team[$tid]['status']) && $team[$tid]['status'] == "Штатный") {
+
       }
+      else {
+        $tid = 'o';
+      }
+      if (!isset($team[$tid]['chas_itogo'])) {
+        $team[$tid]['chas'][] = $hours;
+        $team[$tid]['chas_itogo'] = 0;
+      }
+      $team[$tid]['chas_itogo'] = $team[$tid]['chas_itogo'] + $hours;
+      // ВСЕ часы в сумме.
+      $vsego_chasov = $vsego_chasov + $hours;
     }
     /*foreach ($team as $key => $value) {
       if (!isset($value['chas_itogo'])) {
@@ -481,7 +464,7 @@ class PageItog extends ControllerBase {
     // А вот и сам массив, данные из которого мы выводим на странице.
     $renderable = [];
     $renderable['info'] = [
-      '#markup' => "Общий отчет с " . format_date(strtotime($start), 'custom', 'd-m-Y')
+      '#markup' => "Полный отчет с " . format_date(strtotime($start), 'custom', 'd-m-Y')
       . " по " . format_date(strtotime($end), 'custom', 'd-m-Y'),
     ];
     $data = [
@@ -540,7 +523,7 @@ class PageItog extends ControllerBase {
       'lgotniki' => 'Льготники',
       'guest' => 'Гости',
     ];
-    // Информация для таблицы-1 (посещаемость экскурсий в штуках).
+    // Информация для таблицы-1 (посещаемость экскурсий).
     $rows1 = [];
     foreach ($kat_visit as $key) {
       $row1 = [];
@@ -594,61 +577,7 @@ class PageItog extends ControllerBase {
       }
       $rows1[] = $row1;
     }
-    // Информация для таблицы-2 (посещаемость экскурсий в часах).
-    $rows11 = [];
-    foreach ($kat_visit as $key) {
-      $row11 = [];
-      foreach ($header as $k => $v) {
-        if ($k == 0) {
-          $row11[] = $key;
-        }
-        elseif ($k == 1) {
-          if (isset($visitors_vol[$key])) {
-            $row11[] = $visitors_vol[$key]['ekskurs_long'];
-          }
-          else {
-            $row11[] = 0;
-          }
-        }
-        elseif ($k == 2) {
-          if (isset($visitors_volobl[$key])) {
-            $row11[] = $visitors_volobl[$key]['ekskurs_long'];
-          }
-          else {
-            $row11[] = 0;
-          }
-        }
-        elseif ($k == 3) {
-          if (isset($visitors_russia[$key])) {
-            $row11[] = $visitors_russia[$key]['ekskurs_long'];
-          }
-          else {
-            $row11[] = 0;
-          }
-        }
-        elseif ($k == 4) {
-          if (isset($visitors_another[$key])) {
-            $row11[] = $visitors_another[$key]['ekskurs_long'];
-          }
-          else {
-            $row11[] = 0;
-          }
-        }
-        elseif ($k == 5) {
-          if (isset($visitors_none[$key])) {
-            $row11[] = $visitors_none[$key]['ekskurs_long'];
-          }
-          else {
-            $row11[] = 0;
-          }
-        }
-        else {
-          $row11[] = 0;
-        }
-      }
-      $rows11[] = $row11;
-    }
-    // Информация для таблицы-3 (посещаемость мероприятий).
+    // Информация для таблицы-2 (посещаемость мероприятий).
     $rows2 = [];
     foreach ($kat_visit as $key) {
       $row2 = [];
@@ -702,7 +631,7 @@ class PageItog extends ControllerBase {
       }
       $rows2[] = $row2;
     }
-    // Информация для таблицы-4 (посещаемость общая - суммарная).
+    // Информация для таблицы-3 (посещаемость общая - суммарная).
     $rows3 = [];
     foreach ($kat_visit as $key) {
       $row3 = [];
@@ -759,17 +688,10 @@ class PageItog extends ControllerBase {
     // Массив для построения таблиц:
     $data['ekskurs'] = [
       '#theme' => 'table',
-      '#caption' => 'Категории посетителей экскурсий в штуках',
+      '#caption' => 'Категории посетителей экскурсий',
       '#attributes' => ['class' => ['tables-kateg-posetit']],
       '#header' => $header,
       '#rows' => $rows1,
-    ];
-    $data['ekskurs_long'] = [
-      '#theme' => 'table',
-      '#caption' => 'Категории посетителей экскурсий в часах',
-      '#attributes' => ['class' => ['tables-kateg-posetit']],
-      '#header' => $header,
-      '#rows' => $rows11,
     ];
     $data['meropr'] = [
       '#theme' => 'table',
@@ -780,16 +702,91 @@ class PageItog extends ControllerBase {
     ];
     $data['sum'] = [
       '#theme' => 'table',
-      '#caption' => 'Категории посетителей (сводная) в людях',
+      '#caption' => 'Категории посетителей (сводная)',
       '#attributes' => ['class' => ['tables-kateg-posetit']],
       '#header' => $header,
       '#rows' => $rows3,
     ];
-    $renderable['h'] = [
-      '#theme' => 'report-itog',
+    $renderable['f'] = [
+      '#theme' => 'report-full',
       '#data' => $data,
     ];
     return $renderable;
+  }
+
+  /**
+   * Делаем из поля "ссылка на команду" массив людей.
+   */
+  public function getOrdersTeam($field_orders_team) {
+    $team = [];
+    foreach ($field_orders_team as $key => $man) {
+      $node_team = $man->entity;
+      $lastname = $node_team->field_team_name_last->value;
+      $name = $node_team->field_team_name->value;
+      $middlename = $node_team->field_team_name_middle->value;
+      $team[] = [
+        'Ф работника' => $lastname,
+        'И работника' => $name,
+        'О работника' => $middlename,
+      ];
+    }
+    return $team;
+  }
+
+  /**
+   * Функциями getХххх() формируем из ноды объекты.
+   */
+  public function getOrders($start, $end) {
+    $start = strtotime($start);
+    $end = strtotime($end);
+    $start_norm = format_date($start, 'custom', "Y-m-d");
+    $end_norm = format_date($end, 'custom', "Y-m-d");
+    $query = \Drupal::entityQuery('node');
+    $query->condition('status', 1);
+    $query->condition('type', 'orders');
+    $query->condition('field_orders_date', $start_norm, '>');
+    $query->condition('field_orders_date', $end_norm, '<');
+    $entity_ids = $query->execute();
+    $orders = Node::loadMultiple($entity_ids);
+    return $orders;
+  }
+
+  /**
+   * A getOgders.
+   */
+  public function getExhour($nids = []) {
+    $query = \Drupal::entityQuery('node');
+    $query->condition('status', 1);
+    $query->condition('type', 'exhour');
+    $query->condition('field_exhour_ref_orders', $nids, 'IN');
+    $entity_ids = $query->execute();
+    $exhour = Node::loadMultiple($entity_ids);
+    return $exhour;
+  }
+
+  /**
+   * A getOgders.
+   */
+  public function getTeam() {
+    $query = \Drupal::entityQuery('node');
+    $query->condition('status', 1);
+    $query->condition('type', 'team');
+    $entity_ids = $query->execute();
+    $teams = Node::loadMultiple($entity_ids);
+    return $teams;
+  }
+
+  /**
+   * A getOgders.
+   */
+  public function getPayment($nids = []) {
+    $query = \Drupal::entityQuery('node');
+    $query->condition('status', 1);
+    $query->condition('type', 'payment');
+    $query->condition('field_payment_ref_orders', $nids, 'IN');
+    $entity_ids = $query->execute();
+    $payments = Node::loadMultiple($entity_ids);
+    return $payments;
   }
 
 }

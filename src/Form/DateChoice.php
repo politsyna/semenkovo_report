@@ -25,7 +25,13 @@ class DateChoice extends FormBase {
     $date_to = $form_state->getValue('date_to');
     if ($user->hasPermission('access report-form')) {
       if ($date_from && $date_to) {
-        $response->addCommand(new RedirectCommand('/report/itog/' . $date_from . '/' . $date_to));
+        if ($date_from < $date_to) {
+          $response->addCommand(new RedirectCommand('/report/itog/' . $date_from . '/' . $date_to));
+        }
+        else {
+          $response->addCommand(new HtmlCommand("#date-choice", "Начало отчетного
+          периода должно быть раньше его окончания."));
+        }
       }
       else {
         $response->addCommand(new HtmlCommand("#date-choice", "Введите даты отчетного периода"));
@@ -48,7 +54,43 @@ class DateChoice extends FormBase {
     $date_to = $form_state->getValue('date_to');
     if ($user->hasPermission('access report-form')) {
       if ($date_from && $date_to) {
-        $response->addCommand(new RedirectCommand('/report/exp/' . $date_from . '/' . $date_to));
+        if ($date_from < $date_to) {
+          $response->addCommand(new RedirectCommand('/report/exkurs/' . $date_from . '/' . $date_to));
+        }
+        else {
+          $response->addCommand(new HtmlCommand("#date-choice", "Начало отчетного
+          периода должно быть раньше его окончания."));
+        }
+      }
+      else {
+        $response->addCommand(new HtmlCommand("#date-choice", "Введите даты отчетного периода"));
+      }
+    }
+    else {
+      $response->addCommand(new HtmlCommand("#date-choice", "Доступ запрещен"));
+    }
+    return $response;
+  }
+
+  /**
+   * F ajaxModeDev.
+   */
+  public function ajaxDateChoice3(array &$form, &$form_state) {
+    $response = new AjaxResponse();
+    $uid = \Drupal::currentUser()->id();
+    $user = User::load($uid);
+    $date_from = $form_state->getValue('date_from');
+    $date_to = $form_state->getValue('date_to');
+    if ($user->hasPermission('access report-form')) {
+      if ($date_from && $date_to) {
+        if ($date_from < $date_to) {
+          $response->addCommand(new RedirectCommand('report/full?field_orders_date_value=' .
+          $date_from . '&field_orders_date_value_1=' . $date_to));
+        }
+        else {
+          $response->addCommand(new HtmlCommand("#date-choice", "Начало отчетного
+          периода должно быть раньше его окончания."));
+        }
       }
       else {
         $response->addCommand(new HtmlCommand("#date-choice", "Введите даты отчетного периода"));
@@ -99,10 +141,20 @@ class DateChoice extends FormBase {
     ];
     $form['actions']['otchet'] = [
       '#type' => 'submit',
-      '#value' => 'Полный отчет',
-      '#attributes' => ['class' => ['btn', 'btn-xs']],
+      '#value' => 'Экскурсионный отчет',
+      '#attributes' => ['class' => ['btn', 'btn-xs', 'btn-warning']],
       '#ajax' => [
         'callback' => '::ajaxDateChoice2',
+        'effect' => 'fade',
+        'progress' => ['type' => 'throbber', 'message' => ""],
+      ],
+    ];
+    $form['actions']['full'] = [
+      '#type' => 'submit',
+      '#value' => 'Полный отчет',
+      '#attributes' => ['class' => ['btn', 'btn-xs', 'btn-info']],
+      '#ajax' => [
+        'callback' => '::ajaxDateChoice3',
         'effect' => 'fade',
         'progress' => ['type' => 'throbber', 'message' => ""],
       ],
