@@ -119,7 +119,7 @@ class PageExkurs extends ControllerBase {
       if ($name_programm == 'Игровые мероприятия' || $name_programm == 'Мастер-класс' ||
       $name_programm == 'Один день из жизни деревни' || $name_programm == 'Солнцеворот' ||
       $name_programm == 'Туристический поезд' || $name_programm == 'Экологическая программа' ||
-      $name_programm == 'Экскурсионное обслуживание') {
+      $name_programm == 'Экскурсионное обслуживание' || $name_programm == 'Театральное представление') {
         $kolvo_ekskurs = $kolvo_ekskurs + $kolvo_programm;
         $kolvo_ekskurs_long = $kolvo_ekskurs_long + $kolvo_programm * $activity_long;
       }
@@ -187,7 +187,7 @@ class PageExkurs extends ControllerBase {
         if ($name_programm == 'Игровые мероприятия' || $name_programm == 'Мастер-класс' ||
         $name_programm == 'Один день из жизни деревни' || $name_programm == 'Солнцеворот' ||
         $name_programm == 'Туристический поезд' || $name_programm == 'Экологическая программа' ||
-        $name_programm == 'Экскурсионное обслуживание') {
+        $name_programm == 'Экскурсионное обслуживание' || $name_programm == 'Театральное представление') {
           $current_visitors_kateg = $visitors_kateg[$kategoria]['sum'] + $kolvo_po_kateg * $activity_long;
           $visitors_kateg[$kategoria]['sum'] = $current_visitors_kateg;
         }
@@ -221,7 +221,7 @@ class PageExkurs extends ControllerBase {
         if ($name_programm == 'Игровые мероприятия' || $name_programm == 'Мастер-класс' ||
         $name_programm == 'Один день из жизни деревни' || $name_programm == 'Солнцеворот' ||
         $name_programm == 'Туристический поезд' || $name_programm == 'Экологическая программа' ||
-        $name_programm == 'Экскурсионное обслуживание') {
+        $name_programm == 'Экскурсионное обслуживание' || $name_programm == 'Театральное представление') {
           $visitors_reg[$region]['sum'] = $visitors_reg[$region]['sum'] + $kolvo_po_kateg * $activity_long;
         }
         else {
@@ -234,7 +234,7 @@ class PageExkurs extends ControllerBase {
         if ($name_programm == 'Игровые мероприятия' || $name_programm == 'Мастер-класс' ||
         $name_programm == 'Один день из жизни деревни' || $name_programm == 'Солнцеворот' ||
         $name_programm == 'Туристический поезд' || $name_programm == 'Экологическая программа' ||
-        $name_programm == 'Экскурсионное обслуживание') {
+        $name_programm == 'Экскурсионное обслуживание' || $name_programm == 'Театральное представление') {
           $kolvo_people_ekskurs = $kolvo_people_ekskurs + $kolvo_po_kateg;
           $kolvo_people_ekskurs_long = $kolvo_people_ekskurs_long + $kolvo_po_kateg * $activity_long;
         }
@@ -266,7 +266,7 @@ class PageExkurs extends ControllerBase {
           if ($name_programm == 'Игровые мероприятия' || $name_programm == 'Мастер-класс' ||
           $name_programm == 'Один день из жизни деревни' || $name_programm == 'Солнцеворот' ||
           $name_programm == 'Туристический поезд' || $name_programm == 'Экологическая программа' ||
-          $name_programm == 'Экскурсионное обслуживание') {
+          $name_programm == 'Экскурсионное обслуживание' || $name_programm == 'Театральное представление') {
             $visitors_vol[$kategoria]['ekskurs'] = $visitors_vol[$kategoria]['ekskurs'] + $kolvo_po_kateg * $activity_long;
           }
           elseif ($name_programm == 'Массовое мероприятие') {
@@ -275,7 +275,8 @@ class PageExkurs extends ControllerBase {
           if ($name_programm == 'Игровые мероприятия' || $name_programm == 'Мастер-класс' ||
           $name_programm == 'Один день из жизни деревни' || $name_programm == 'Солнцеворот' ||
           $name_programm == 'Туристический поезд' || $name_programm == 'Экологическая программа' ||
-          $name_programm == 'Экскурсионное обслуживание' || $name_programm == 'Массовое мероприятие') {
+          $name_programm == 'Экскурсионное обслуживание' || $name_programm == 'Массовое мероприятие' ||
+          $name_programm == 'Театральное представление') {
             $visitors_vol[$kategoria]['sum'] = $visitors_vol[$kategoria]['ekskurs'] + $visitors_vol[$kategoria]['meropr'];
           }
         }
@@ -294,7 +295,7 @@ class PageExkurs extends ControllerBase {
           if ($name_programm == 'Игровые мероприятия' || $name_programm == 'Мастер-класс' ||
           $name_programm == 'Один день из жизни деревни' || $name_programm == 'Солнцеворот' ||
           $name_programm == 'Туристический поезд' || $name_programm == 'Экологическая программа' ||
-          $name_programm == 'Экскурсионное обслуживание') {
+          $name_programm == 'Экскурсионное обслуживание' || $name_programm == 'Театральное представление') {
             $visitors_volobl[$kategoria]['ekskurs'] = $visitors_volobl[$kategoria]['ekskurs'] + $kolvo_po_kateg * $activity_long;
           }
           elseif ($name_programm == 'Массовое мероприятие') {
@@ -303,7 +304,8 @@ class PageExkurs extends ControllerBase {
           if ($name_programm == 'Игровые мероприятия' || $name_programm == 'Мастер-класс' ||
           $name_programm == 'Один день из жизни деревни' || $name_programm == 'Солнцеворот' ||
           $name_programm == 'Туристический поезд' || $name_programm == 'Экологическая программа' ||
-          $name_programm == 'Экскурсионное обслуживание' || $name_programm == 'Массовое мероприятие') {
+          $name_programm == 'Экскурсионное обслуживание' || $name_programm == 'Массовое мероприятие' ||
+          $name_programm == 'Театральное представление') {
             $visitors_volobl[$kategoria]['sum'] = $visitors_volobl[$kategoria]['ekskurs'] + $visitors_volobl[$kategoria]['meropr'];
           }
         }
@@ -322,7 +324,7 @@ class PageExkurs extends ControllerBase {
           if ($name_programm == 'Игровые мероприятия' || $name_programm == 'Мастер-класс' ||
           $name_programm == 'Один день из жизни деревни' || $name_programm == 'Солнцеворот' ||
           $name_programm == 'Туристический поезд' || $name_programm == 'Экологическая программа' ||
-          $name_programm == 'Экскурсионное обслуживание') {
+          $name_programm == 'Экскурсионное обслуживание' || $name_programm == 'Театральное представление') {
             $visitors_russia[$kategoria]['ekskurs'] = $visitors_russia[$kategoria]['ekskurs'] + $kolvo_po_kateg * $activity_long;
           }
           elseif ($name_programm == 'Массовое мероприятие') {
@@ -331,7 +333,8 @@ class PageExkurs extends ControllerBase {
           if ($name_programm == 'Игровые мероприятия' || $name_programm == 'Мастер-класс' ||
           $name_programm == 'Один день из жизни деревни' || $name_programm == 'Солнцеворот' ||
           $name_programm == 'Туристический поезд' || $name_programm == 'Экологическая программа' ||
-          $name_programm == 'Экскурсионное обслуживание' || $name_programm == 'Массовое мероприятие') {
+          $name_programm == 'Экскурсионное обслуживание' || $name_programm == 'Массовое мероприятие' ||
+          $name_programm == 'Театральное представление') {
             $visitors_russia[$kategoria]['sum'] = $visitors_russia[$kategoria]['ekskurs'] + $visitors_russia[$kategoria]['meropr'];
           }
         }
@@ -350,7 +353,7 @@ class PageExkurs extends ControllerBase {
           if ($name_programm == 'Игровые мероприятия' || $name_programm == 'Мастер-класс' ||
           $name_programm == 'Один день из жизни деревни' || $name_programm == 'Солнцеворот' ||
           $name_programm == 'Туристический поезд' || $name_programm == 'Экологическая программа' ||
-          $name_programm == 'Экскурсионное обслуживание') {
+          $name_programm == 'Экскурсионное обслуживание' || $name_programm == 'Театральное представление') {
             $visitors_another[$kategoria]['ekskurs'] = $visitors_another[$kategoria]['ekskurs'] + $kolvo_po_kateg * $activity_long;
           }
           elseif ($name_programm == 'Массовое мероприятие') {
@@ -359,7 +362,8 @@ class PageExkurs extends ControllerBase {
           if ($name_programm == 'Игровые мероприятия' || $name_programm == 'Мастер-класс' ||
           $name_programm == 'Один день из жизни деревни' || $name_programm == 'Солнцеворот' ||
           $name_programm == 'Туристический поезд' || $name_programm == 'Экологическая программа' ||
-          $name_programm == 'Экскурсионное обслуживание' || $name_programm == 'Массовое мероприятие') {
+          $name_programm == 'Экскурсионное обслуживание' || $name_programm == 'Массовое мероприятие' ||
+          $name_programm == 'Театральное представление') {
             $visitors_another[$kategoria]['sum'] = $visitors_another[$kategoria]['ekskurs'] + $visitors_another[$kategoria]['meropr'];
           }
         }
@@ -378,7 +382,7 @@ class PageExkurs extends ControllerBase {
           if ($name_programm == 'Игровые мероприятия' || $name_programm == 'Мастер-класс' ||
           $name_programm == 'Один день из жизни деревни' || $name_programm == 'Солнцеворот' ||
           $name_programm == 'Туристический поезд' || $name_programm == 'Экологическая программа' ||
-          $name_programm == 'Экскурсионное обслуживание') {
+          $name_programm == 'Экскурсионное обслуживание' || $name_programm == 'Театральное представление') {
             $visitors_none[$kategoria]['ekskurs'] = $visitors_none[$kategoria]['ekskurs'] + $kolvo_po_kateg * $activity_long;
           }
           elseif ($name_programm == 'Массовое мероприятие') {
@@ -387,7 +391,8 @@ class PageExkurs extends ControllerBase {
           if ($name_programm == 'Игровые мероприятия' || $name_programm == 'Мастер-класс' ||
           $name_programm == 'Один день из жизни деревни' || $name_programm == 'Солнцеворот' ||
           $name_programm == 'Туристический поезд' || $name_programm == 'Экологическая программа' ||
-          $name_programm == 'Экскурсионное обслуживание' || $name_programm == 'Массовое мероприятие') {
+          $name_programm == 'Экскурсионное обслуживание' || $name_programm == 'Массовое мероприятие' ||
+          $name_programm == 'Театральное представление') {
             $visitors_none[$kategoria]['sum'] = $visitors_none[$kategoria]['ekskurs'] + $visitors_none[$kategoria]['meropr'];
           }
         }
@@ -419,7 +424,7 @@ class PageExkurs extends ControllerBase {
         if ($name_programm == 'Игровые мероприятия' || $name_programm == 'Мастер-класс' ||
         $name_programm == 'Один день из жизни деревни' || $name_programm == 'Солнцеворот' ||
         $name_programm == 'Туристический поезд' || $name_programm == 'Экологическая программа' ||
-        $name_programm == 'Экскурсионное обслуживание') {
+        $name_programm == 'Экскурсионное обслуживание' || $name_programm == 'Театральное представление') {
           $oplacheno_ekskurs = $oplacheno_ekskurs + $payment[$id]['oplacheno'];
         }
         // Считаем доход по всем программам, относящимся к массовым мероприятиям (сумма всех "оплачено").
