@@ -185,6 +185,7 @@ class PageItog extends ControllerBase {
         }
         $current_visitors_kateg = $visitors_kateg[$kategoria]['sum'] + $kolvo_po_kateg;
         $visitors_kateg[$kategoria]['sum'] = $current_visitors_kateg;
+
         // Сколько льготников пришло на услугу "Входной билет".
         if ($name_programm == 'Входной билет') {
           if ($kategoria == 'Музейные работники') {
@@ -474,6 +475,17 @@ class PageItog extends ControllerBase {
         $vsego_chasov = $vsego_chasov + $hours;
       }
     }
+    // ВСЕ посетители по всем категориям в сумме.
+    $vse_visitors_sum = 0;
+    foreach ($visitors_kateg as $key => $value) {
+      $vse_visitors_sum = $vse_visitors_sum + $value['sum'];
+    }
+    // ВСЕ посетители по всем регионам в сумме.
+    $vse_visitors_reg_sum = 0;
+    foreach ($visitors_reg as $key => $value) {
+      $vse_visitors_reg_sum = $vse_visitors_reg_sum + $value['sum'];
+    }
+
     /*foreach ($team as $key => $value) {
       if (!isset($value['chas_itogo'])) {
         unset($team[$key]);
@@ -518,7 +530,9 @@ class PageItog extends ControllerBase {
       'oplacheno_arenda' => number_format($oplacheno_arenda, 0, ",", " ") . " руб.",
       'debet' => number_format($debet, 0, ",", " ") . " руб.",
       'all_kategory' => $visitors_kateg,
+      'vse_visitors_sum' => $vse_visitors_sum,
       'all_region' => $visitors_reg,
+      'vse_visitors_reg_sum' => $vse_visitors_reg_sum,
       'today' => format_date(time(), 'custom', 'd-m-Y'),
       'now' => format_date(time(), 'custom', 'H:i'),
       'user' => $user->name->value,
@@ -599,6 +613,19 @@ class PageItog extends ControllerBase {
       }
       $rows1[] = $row1;
     }
+    // Сумма по столбикам:
+    $vol1 = 0;
+    $volobl1 = 0;
+    $russia1 = 0;
+    $another1 = 0;
+    $none1 = 0;
+    foreach ($rows1 as $key => $value) {
+      $vol1 = $vol1 + $value[1];
+      $volobl1 = $volobl1 + $value[2];
+      $russia1 = $russia1 + $value[3];
+      $another1 = $another1 + $value[4];
+      $none1 = $none1 + $value[5];
+    }
     // Информация для таблицы-2 (посещаемость экскурсий в часах).
     $rows11 = [];
     foreach ($kat_visit as $key) {
@@ -652,6 +679,19 @@ class PageItog extends ControllerBase {
         }
       }
       $rows11[] = $row11;
+    }
+    // Сумма по столбикам:
+    $vol11 = 0;
+    $volobl11 = 0;
+    $russia11 = 0;
+    $another11 = 0;
+    $none11 = 0;
+    foreach ($rows11 as $key => $value) {
+      $vol11 = $vol11 + $value[1];
+      $volobl11 = $volobl11 + $value[2];
+      $russia11 = $russia11 + $value[3];
+      $another11 = $another11 + $value[4];
+      $none11 = $none11 + $value[5];
     }
     // Информация для таблицы-3 (посещаемость мероприятий).
     $rows2 = [];
@@ -707,6 +747,19 @@ class PageItog extends ControllerBase {
       }
       $rows2[] = $row2;
     }
+    // Сумма по столбикам:
+    $vol2 = 0;
+    $volobl2 = 0;
+    $russia2 = 0;
+    $another2 = 0;
+    $none2 = 0;
+    foreach ($rows2 as $key => $value) {
+      $vol2 = $vol2 + $value[1];
+      $volobl2 = $volobl2 + $value[2];
+      $russia2 = $russia2 + $value[3];
+      $another2 = $another2 + $value[4];
+      $none2 = $none2 + $value[5];
+    }
     // Информация для таблицы-4 (посещаемость общая - суммарная).
     $rows3 = [];
     foreach ($kat_visit as $key) {
@@ -761,34 +814,97 @@ class PageItog extends ControllerBase {
       }
       $rows3[] = $row3;
     }
+    // Сумма по столбикам:
+    $vol3 = 0;
+    $volobl3 = 0;
+    $russia3 = 0;
+    $another3 = 0;
+    $none3 = 0;
+    foreach ($rows3 as $key => $value) {
+      $vol3 = $vol3 + $value[1];
+      $volobl3 = $volobl3 + $value[2];
+      $russia3 = $russia3 + $value[3];
+      $another3 = $another3 + $value[4];
+      $none3 = $none3 + $value[5];
+    }
+
     // Массив для построения таблиц:
     $data['ekskurs'] = [
       '#theme' => 'table',
-      '#caption' => 'Категории посетителей экскурсий в штуках',
+      '#caption' => [
+        '#markup' => 'Категории посетителей экскурсий в штуках <span type="button"
+      class="badge badge-success" data-container="body" data-toggle="popover"
+      data-placement="top" data-content="Показывает количество проведенных
+      экскурсий-мероприятий. К экскурсиям относятся мероприятия из категорий
+      «Игровые мероприятия», «Мастер-классы», «Один день из жизни деревни»,
+      «Солнцеворот», «Театральное представление», «Экологическая программа»,
+      «Экскурсионное обслуживание»">
+        i
+      </span>',
+      ],
       '#attributes' => ['class' => ['tables-kateg-posetit']],
       '#header' => $header,
       '#rows' => $rows1,
+      '#footer' => [
+        ['ВСЕГО:', $vol1, $volobl1, $russia1, $another1, $none1],
+      ],
     ];
     $data['ekskurs_long'] = [
       '#theme' => 'table',
-      '#caption' => 'Категории посетителей экскурсий в часах',
+      '#caption' => [
+        '#markup' => 'Категории посетителей экскурсий в часах <span type="button"
+    class="badge badge-success" data-container="body" data-toggle="popover"
+    data-placement="top" data-content="Показывает количество проведенных
+    экскурсий-мероприятий в экскурсионных часах – сумма произведений мероприятия
+    на его продолжительность в академических часах. К экскурсиям относятся
+    мероприятия из категорий «Игровые мероприятия», «Мастер-классы», «Один день
+    из жизни деревни», «Солнцеворот», «Театральное представление», «Экологическая
+    программа», «Экскурсионное обслуживание»">
+      i
+    </span>',
+      ],
       '#attributes' => ['class' => ['tables-kateg-posetit']],
       '#header' => $header,
       '#rows' => $rows11,
+      '#footer' => [
+        ['ВСЕГО:', $vol11, $volobl11, $russia11, $another11, $none11],
+      ],
     ];
     $data['meropr'] = [
       '#theme' => 'table',
-      '#caption' => 'Категории посетителей массовых мероприятий',
+      '#caption' => [
+        '#markup' => 'Категории посетителей массовых мероприятий <span type="button"
+    class="badge badge-success" data-container="body" data-toggle="popover"
+    data-placement="top" data-content="Показывает количество массовых мероприятий.
+    К массовым мероприятиям относятся мероприятия из категорий «Массовое
+    мероприятие», «Туристический поезд»">
+      i
+    </span>',
+      ],
       '#attributes' => ['class' => ['tables-kateg-posetit']],
       '#header' => $header,
       '#rows' => $rows2,
+      '#footer' => [
+        ['ВСЕГО:', $vol2, $volobl2, $russia2, $another2, $none2],
+      ],
     ];
     $data['sum'] = [
       '#theme' => 'table',
-      '#caption' => 'Категории посетителей (сводная) в людях',
+      '#caption' => [
+        '#markup' => 'Категории посетителей (сводная) в людях <span type="button"
+  class="badge badge-success" data-container="body" data-toggle="popover"
+  data-placement="top" data-content="Показывает сумму соответствующих значений
+  таблицы «Категории посетителей экскурсий в штуках» и таблицы «Категории
+  посетителей массовых мероприятий»">
+    i
+  </span>',
+    ],
       '#attributes' => ['class' => ['tables-kateg-posetit']],
       '#header' => $header,
       '#rows' => $rows3,
+      '#footer' => [
+        ['ВСЕГО:', $vol3, $volobl3, $russia3, $another3, $none3],
+      ],
     ];
     $renderable['h'] = [
       '#theme' => 'report-itog',

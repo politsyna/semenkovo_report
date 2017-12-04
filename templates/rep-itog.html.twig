@@ -81,6 +81,11 @@
         <td>{{ kategory.sum }}</td>
       </tr>
       {% endfor %}
+      <tr>
+        <td> </td>
+        <td>ВСЕГО:</td>
+        <td>{{data.vse_visitors_sum }}</td>
+      </tr>
       </table>
       <h5>Учет посетителей по регионам</h5>
       <table class="all_tables">
@@ -96,6 +101,11 @@
         <td>{{ region.sum }}</td>
       </tr>
       {% endfor %}
+      <tr>
+        <td> </td>
+        <td>ВСЕГО:</td>
+        <td>{{data.vse_visitors_reg_sum }}</td>
+      </tr>
       </table>
 
       <h5>Статистика по посещаемости</h5>
@@ -113,15 +123,34 @@
         <td>{{data.people_free_vhod}}</td>
       </tr>
       <tr>
-        <td>Количество экскурсантов</td>
+        <td>Количество экскурсантов <span type="button" class="badge badge-success"
+        data-container="body" data-toggle="popover" data-placement="top"
+        data-content="К экскурсиям относятся мероприятия из категорий «Игровые
+        мероприятия», «Мастер-классы», «Один день из жизни деревни», «Солнцеворот»,
+        «Театральное представление», «Экологическая программа», «Экскурсионное
+        обслуживание»">
+          i
+        </span></td>
         <td>{{data.kolvo_people_ekskurs}}</td>
       </tr>
       <tr>
-        <td>Количество экскурсантов в человеко-часах</td>
+        <td>Количество экскурсантов в человеко-часах <span type="button"
+        class="badge badge-success" data-container="body" data-toggle="popover"
+        data-placement="top" data-content="К экскурсиям относятся мероприятия из
+        категорий «Игровые мероприятия», «Мастер-классы», «Один день из жизни
+        деревни», «Солнцеворот», «Театральное представление», «Экологическая
+        программа», «Экскурсионное обслуживание»">
+          i
+        </span></td>
         <td>{{data.kolvo_people_ekskurs_long}}</td>
       </tr>
       <tr>
-        <td>Количество участников массовых мероприятий</td>
+        <td>Количество участников массовых мероприятий <span type="button"
+        class="badge badge-success" data-container="body" data-toggle="popover"
+        data-placement="top" data-content="К массовым мероприятиям относятся
+        мероприятия из категорий «Массовое мероприятие», «Туристический поезд»">
+          i
+        </span></td>
         <td>{{data.kolvo_people_meropr}}</td>
       </tr>
       <tr>
@@ -137,11 +166,23 @@
         <td>{{data.summ_cost_vhod}}</td>
       </tr>
       <tr>
-        <td>Доход за экскурсии (оплачено)</td>
+        <td>Доход за экскурсии (оплачено) <span type="button"
+        class="badge badge-success" data-container="body" data-toggle="popover"
+        data-placement="top" data-content="К экскурсиям относятся мероприятия
+        из категорий «Игровые мероприятия», «Мастер-классы», «Один день из жизни
+        деревни», «Солнцеворот», «Театральное представление», «Экологическая
+        программа», «Экскурсионное обслуживание»">
+          i
+        </span></td>
         <td>{{data.oplacheno_ekskurs}}</td>
       </tr>
       <tr>
-        <td>Доход за массовые мероприятия (оплачено)</td>
+        <td>Доход за массовые мероприятия (оплачено) <span type="button"
+        class="badge badge-success" data-container="body" data-toggle="popover"
+        data-placement="top" data-content="К массовым мероприятиям относятся
+        мероприятия из категорий «Массовое мероприятие», «Туристический поезд»">
+          i
+        </span></td>
         <td>{{data.oplacheno_meropr}}</td>
       </tr>
       <tr>
@@ -165,12 +206,24 @@
       <h5>Статистика по услугам</h5>
       <table class="all_tables">
       <tr>
-        <td>Количество экскурсий</td>
+        <td>Количество экскурсий <span type="button"
+        class="badge badge-success" data-container="body" data-toggle="popover"
+        data-placement="top" data-content="К экскурсиям относятся мероприятия из
+        категорий «Игровые мероприятия», «Мастер-классы», «Один день из жизни
+        деревни», «Солнцеворот», «Театральное представление», «Экологическая
+        программа», «Экскурсионное обслуживание»">
+          i
+        </span></td>
         <td>{{data.kolvo_ekskurs}}</td>
         <td>{{data.kolvo_ekskurs_long}}</td>
       </tr>
       <tr>
-        <td>Количество массовых мероприятий</td>
+        <td>Количество массовых мероприятий <span type="button"
+        class="badge badge-success" data-container="body" data-toggle="popover"
+        data-placement="top" data-content="К массовым мероприятиям относятся
+        мероприятия из категорий «Массовое мероприятие», «Туристический поезд»">
+          i
+        </span></td>
         <td>{{data.kolvo_meropr}}</td>
         <td>{{data.kolvo_meropr_long}}</td>
       </tr>
