@@ -36,7 +36,7 @@ class Helper extends ControllerBase {
   /**
    * Функциями getХххх() формируем из ноды объекты.
    */
-  public static function getOrders($start, $end) {
+  public static function getOrders($start, $end, $usluga = FALSE) {
     $start = strtotime($start);
     $end = strtotime($end);
     if ($start > 0 && $end > 0 && $start < $end) {
@@ -48,6 +48,9 @@ class Helper extends ControllerBase {
       $query->condition('field_orders_status', 'cancel', '<>');
       $query->condition('field_orders_date', $start_norm, '>');
       $query->condition('field_orders_date', $end_norm, '<');
+      if (is_array($usluga)) {
+        $query->condition('field_orders_ref_activity', $usluga, 'IN');
+      }
       $entity_ids = $query->execute();
       $orders = Node::loadMultiple($entity_ids);
       return $orders;

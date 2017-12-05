@@ -28,7 +28,7 @@ page_full:
     _permission: 'access report-form'
 
 page_vyborka:
-  path: 'report/vyborka/{start}/{end}'
+  path: 'report/vyborka/{start}/{end}/{usluga}'
   defaults:
     _controller: '\Drupal\report\Controller\PageVyborka::report'
   requirements:

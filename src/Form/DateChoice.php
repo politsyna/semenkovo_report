@@ -8,6 +8,7 @@ use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\HtmlCommand;
 use Drupal\Core\Ajax\RedirectCommand;
 use Drupal\user\Entity\User;
+use Drupal\node\Entity\Node;
 
 /**
  * SimpleForm.
@@ -107,14 +108,21 @@ class DateChoice extends FormBase {
    */
   public function ajaxDateChoice4(array &$form, &$form_state) {
     $response = new AjaxResponse();
+    $usluga = $form_state->getValue('usluga');
     $uid = \Drupal::currentUser()->id();
     $user = User::load($uid);
+    $params = [];
+    foreach ($usluga as $key => $value) {
+      if ($value > 0) {
+        $params[] = $value;
+      }
+    }
     $date_from = $form_state->getValue('date_from');
     $date_to = $form_state->getValue('date_to');
     if ($user->hasPermission('access report-form')) {
       if ($date_from && $date_to) {
         if ($date_from < $date_to) {
-          $response->addCommand(new RedirectCommand('/report/vyborka/' . $date_from . '/' . $date_to));
+          $response->addCommand(new RedirectCommand('/report/vyborka/' . $date_from . '/' . $date_to . '/' . implode("+", $params)));
         }
         else {
           $response->addCommand(new HtmlCommand("#date-choice", "Начало отчетного
@@ -188,7 +196,31 @@ class DateChoice extends FormBase {
         'progress' => ['type' => 'throbber', 'message' => ""],
       ],
     ];
-    $form['actions']['vyborka'] = [
+    $form['actions2'] = [
+      '#type' => 'actions',
+    ];
+    $query = \Drupal::entityQuery('node')
+      ->condition('status', 1)
+      ->condition('type', 'activity')
+      ->sort('field_activity_type', 'ASC')
+      ->sort('title', 'ASC');
+    $ids = $query->execute();
+    if (!empty($ids)) {
+      foreach (Node::loadMultiple($ids) as $nid => $node) {
+        $current_title = $node->title->value;
+        $current_title .= " - <i>";
+        $current_title .= $node->field_activity_type->entity->name->value;
+        $current_title .= "</i>";
+        $options[$nid] = $current_title;
+      }
+    }
+    $form['actions2']['usluga'] = [
+      '#type' => 'checkboxes',
+      '#options' => $options,
+      '#title' => 'Услуга:',
+      '#prefix' => '<br>',
+    ];
+    $form['actions2']['vyborka'] = [
       '#type' => 'submit',
       '#value' => 'Выборка',
       '#attributes' => ['class' => ['btn', 'btn-xs', 'btn-danger']],

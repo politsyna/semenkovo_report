@@ -5,6 +5,8 @@ namespace Drupal\report\Controller;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\node_orders\Controller\Group;
 use Drupal\user\Entity\User;
+use Drupal\node\Entity\Node;
+use Drupal\taxonomy\Entity\Term;
 
 /**
  * Controller routines for page example routes.
@@ -14,7 +16,7 @@ class PageVyborka extends ControllerBase {
   /**
    * A more complex _controller callback that takes arguments.
    */
-  public function report($start, $end) {
+  public function report($start, $end, $usluga) {
     $st = strtotime($start);
     $en = strtotime($end);
     if ($st == 0 || $en == 0 || $st > $en) {
@@ -22,7 +24,25 @@ class PageVyborka extends ControllerBase {
         '#markup' => 'Введите корректные даты отчетного периода.',
       ];
     }
-    $orders = Helper::getOrders($start, $end);
+    $params = explode(" ", $usluga);
+    $usluga_array = [];
+    foreach ($params as $nid) {
+      $node_usluga_name = Node::load($nid);
+      $tx_activity_type = $node_usluga_name->field_activity_type->entity;
+      $tid = $tx_activity_type->id();
+      $current_usluga_name = $node_usluga_name->title->value;
+      $current_usluga_name .= " - <i>";
+      $current_usluga_name .= $node_usluga_name->field_activity_type->entity->name->value;
+      $current_usluga_name .= "</i><br>";
+      $usluga_array[$tid][$nid] = $current_usluga_name;
+    }
+    $usluga_name = "";
+    foreach ($usluga_array as $value) {
+      $usluga_name .= implode(' ', $value);
+    }
+
+    $orders = Helper::getOrders($start, $end, $params);
+
     $source = [];
     $all_programm = [];
     $vsego_programm = 0;
@@ -498,8 +518,11 @@ class PageVyborka extends ControllerBase {
     // А вот и сам массив, данные из которого мы выводим на странице.
     $renderable = [];
     $renderable['info'] = [
-      '#markup' => "Общий отчет с " . format_date(strtotime($start), 'custom', 'd-m-Y')
+      '#markup' => "Выборка с " . format_date(strtotime($start), 'custom', 'd-m-Y')
       . " по " . format_date(strtotime($end), 'custom', 'd-m-Y'),
+    ];
+    $renderable['usluga'] = [
+      '#markup' => "<br>Наименование программы:<br>" . $usluga_name,
     ];
     $data = [
       'team' => $team,
