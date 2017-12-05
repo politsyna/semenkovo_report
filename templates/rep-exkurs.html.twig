@@ -79,7 +79,15 @@
     {% set g9 = data.ekskurs['#rows'][8][4] %}
     {% set d9 = data.ekskurs['#rows'][8][5] %}
 
-    <h5>Категории посетителей экскурсий</h5>
+    <h5>Категории посетителей экскурсий <span type="button" class="badge badge-success"
+    data-container="body" data-toggle="popover" data-placement="top"
+    data-content="Показывает количество проведенных экскурсий-мероприятий в
+    экскурсионных часах. К экскурсиям относятся мероприятия из категорий
+    «Игровые мероприятия», «Мастер-классы», «Один день из жизни деревни»,
+    «Солнцеворот», «Театральное представление», «Экологическая программа»,
+    «Экскурсионное обслуживание»">
+      i
+    </span></h5>
     <table class="all_tables">
       <tr>
         <td>Школьники города Вологды, человеко-час</td>
@@ -107,7 +115,7 @@
       </tr>
       <tr>
         <td>Взрослые, человеко-час</td>
-        <td>{{a1 + b1}}</td>
+        <td>{{a1 + b1 + d1}}</td>
       </tr>
       <tr>
         <td>Туристы, человеко-час</td>
@@ -116,6 +124,10 @@
       <tr>
         <td>Военнослужащие, человеко-час</td>
         <td>{{a6 + b6 + v6 + d6}}</td>
+      </tr>
+      <tr>
+        <td>Музейные работники, человеко-час</td>
+        <td>{{a7 + b7 + v7 + d7}}</td>
       </tr>
       <tr>
         <td>Гости, человеко-час</td>
@@ -128,6 +140,13 @@
       <tr>
         <td>Льготники, человеко-час</td>
         <td>{{a8 + b8 + v8 + d8}}</td>
+      </tr>
+      <tr>
+        <td>ВСЕГО:</td>
+        <td>{{a3 + b3 + v3 + d3 + a2 + b2 + v2 + d2 + a4 + b4 + v4 + d4 + a5 +
+        b5 + v5 + d5 + a1 + b1 + d1 + v1 + a6 + b6 + v6 + d6 + a7 + b7 + v7 +
+        d7 + a9 + b9 + v9 + g9 + d9 + g1 + g2 + g3 + g4 + g5 + g6 + g7 + g8 +
+        a8 + b8 + v8 + d8}}</td>
       </tr>
     </table>
 
@@ -177,7 +196,13 @@
     {% set g9 = data.meropr['#rows'][8][4] %}
     {% set d9 = data.meropr['#rows'][8][5] %}
 
-    <h5>Категории посетителей массовых мероприятий</h5>
+    <h5>Категории посетителей массовых мероприятий <span type="button" class="badge badge-success"
+    data-container="body" data-toggle="popover" data-placement="top"
+    data-content="Показывает количество проведенных массовых мероприятий в
+    экскурсионных часах. К массовым мероприятиям относятся мероприятия из
+    категорий «Массовое мероприятие», «Туристический поезд»">
+      i
+    </span></h5>
     <table class="all_tables">
       <tr>
         <td>Школьники города Вологды, человеко-час</td>
@@ -205,7 +230,7 @@
       </tr>
       <tr>
         <td>Взрослые, человеко-час</td>
-        <td>{{a1 + b1}}</td>
+        <td>{{a1 + b1 + d1}}</td>
       </tr>
       <tr>
         <td>Туристы, человеко-час</td>
@@ -214,6 +239,10 @@
       <tr>
         <td>Военнослужащие, человеко-час</td>
         <td>{{a6 + b6 + v6 + d6}}</td>
+      </tr>
+      <tr>
+        <td>Музейные работники, человеко-час</td>
+        <td>{{a7 + b7 + v7 + d7}}</td>
       </tr>
       <tr>
         <td>Гости, человеко-час</td>
@@ -226,6 +255,13 @@
       <tr>
         <td>Льготники, человеко-час</td>
         <td>{{a8 + b8 + v8 + d8}}</td>
+      </tr>
+      <tr>
+        <td>ВСЕГО:</td>
+        <td>{{a3 + b3 + v3 + d3 + a2 + b2 + v2 + d2 + a4 + b4 + v4 + d4 + a5 +
+        b5 + v5 + d5 + a1 + b1 + d1 + v1 + a6 + b6 + v6 + d6 + a7 + b7 + v7 +
+        d7 + a9 + b9 + v9 + g9 + d9 + g1 + g2 + g3 + g4 + g5 + g6 + g7 + g8 +
+        a8 + b8 + v8 + d8}}</td>
       </tr>
     </table>
 
@@ -275,7 +311,14 @@
     {% set g9 = data.sum['#rows'][8][4] %}
     {% set d9 = data.sum['#rows'][8][5] %}
 
-    <h5>Категории посетителей (сводная)</h5>
+    <h5>Категории посетителей (сводная) <span type="button" class="badge badge-success"
+    data-container="body" data-toggle="popover" data-placement="top"
+    data-content="Показывает суммарное количество проведенных экскурсий и
+    массовых мероприятий в экскурсионных часах - сумма соответствующих значений
+    таблицы «Категории посетителей экскурсий» и таблицы «Категории посетителей
+    массовых мероприятий»">
+      i
+    </span></h5>
     <table class="all_tables">
       <tr>
         <td>Школьники города Вологды, человеко-час</td>
@@ -303,7 +346,7 @@
       </tr>
       <tr>
         <td>Взрослые, человеко-час</td>
-        <td>{{a1 + b1}}</td>
+        <td>{{a1 + b1 + d1}}</td>
       </tr>
       <tr>
         <td>Туристы, человеко-час</td>
@@ -312,6 +355,10 @@
       <tr>
         <td>Военнослужащие, человеко-час</td>
         <td>{{a6 + b6 + v6 + d6}}</td>
+      </tr>
+      <tr>
+        <td>Музейные работники, человеко-час</td>
+        <td>{{a7 + b7 + v7 + d7}}</td>
       </tr>
       <tr>
         <td>Гости, человеко-час</td>
@@ -324,6 +371,13 @@
       <tr>
         <td>Льготники, человеко-час</td>
         <td>{{a8 + b8 + v8 + d8}}</td>
+      </tr>
+      <tr>
+        <td>ВСЕГО:</td>
+        <td>{{a3 + b3 + v3 + d3 + a2 + b2 + v2 + d2 + a4 + b4 + v4 + d4 + a5 +
+        b5 + v5 + d5 + a1 + b1 + d1 + v1 + a6 + b6 + v6 + d6 + a7 + b7 + v7 +
+        d7 + a9 + b9 + v9 + g9 + d9 + g1 + g2 + g3 + g4 + g5 + g6 + g7 + g8 +
+        a8 + b8 + v8 + d8}}</td>
       </tr>
     </table>
 
@@ -370,6 +424,11 @@
         <td>{{ kategory.sum }}</td>
       </tr>
       {% endfor %}
+      <tr>
+        <td> </td>
+        <td>ВСЕГО:</td>
+        <td>{{data.vse_visitors_sum }}</td>
+      </tr>
       </table>
       <h5>Учет посетителей по регионам</h5>
       <table class="all_tables">
@@ -385,6 +444,11 @@
         <td>{{ region.sum }}</td>
       </tr>
       {% endfor %}
+      <tr>
+        <td> </td>
+        <td>ВСЕГО:</td>
+        <td>{{data.vse_visitors_reg_sum }}</td>
+      </tr>
       </table>
 
       <h5>Статистика по посещаемости</h5>
@@ -394,15 +458,34 @@
         <td>{{data.vsego_people_vhod|number_format(0, '.', ' ')}}</td>
       </tr>
       <tr>
-        <td>Количество экскурсантов, человеко-час</td>
+        <td>Количество экскурсантов, человеко-час <span type="button" class="badge badge-success"
+        data-container="body" data-toggle="popover" data-placement="top"
+        data-content="К экскурсиям относятся мероприятия из категорий «Игровые
+        мероприятия», «Мастер-классы», «Один день из жизни деревни», «Солнцеворот»,
+        «Театральное представление», «Экологическая программа», «Экскурсионное
+        обслуживание» без учета категорий «Гости», «Льготники», «Музейные работники»">
+          i
+        </span></td>
         <td>{{data.kolvo_people_ekskurs_long|number_format(0, '.', ' ')}}</td>
       </tr>
       <tr>
-        <td>Количество участников массовых мероприятий, человек</td>
+        <td>Количество участников массовых мероприятий, человек <span type="button" class="badge badge-success"
+        data-container="body" data-toggle="popover" data-placement="top"
+        data-content="К массовым мероприятиям относятся мероприятия из категорий
+        «Массовое мероприятие», «Туристический поезд» без учета категорий «Гости»,
+        «Льготники», «Музейные работники»">
+          i
+        </span></td>
         <td>{{data.kolvo_people_meropr|number_format(0, '.', ' ')}}</td>
       </tr>
       <tr>
-        <td>Количество посетителей, имеющих право на бесплатное посещение, человек</td>
+        <td>Количество посетителей, имеющих право на бесплатное посещение,
+          человек <span type="button" class="badge badge-success"
+        data-container="body" data-toggle="popover" data-placement="top"
+        data-content="Посетители экскурсий и массовых мероприятий лицами,
+        относящимися к категориям «Гости», «Льготники», «Музейные работники»">
+          i
+        </span></td>
         <td>{{data.people_free_vhod|number_format(0, '.', ' ')}}</td>
       </tr>
       {% set summa = data.vsego_people_vhod + data.kolvo_people_ekskurs_long
@@ -420,11 +503,23 @@
         <td>{{data.summ_cost_vhod|number_format(0, '.', ' ')}}</td>
       </tr>
       <tr>
-        <td>Доход за экскурсии, рублей</td>
+        <td>Доход за экскурсии, рублей <span type="button" class="badge badge-success"
+        data-container="body" data-toggle="popover" data-placement="top"
+        data-content="К экскурсиям относятся мероприятия из категорий «Игровые
+        мероприятия», «Мастер-классы», «Один день из жизни деревни», «Солнцеворот»,
+        «Театральное представление», «Экологическая программа», «Экскурсионное
+        обслуживание»">
+          i
+        </span></td>
         <td>{{data.oplacheno_ekskurs|number_format(0, '.', ' ')}}</td>
       </tr>
       <tr>
-        <td>Доход за массовые мероприятия, рублей</td>
+        <td>Доход за массовые мероприятия, рублей <span type="button" class="badge badge-success"
+        data-container="body" data-toggle="popover" data-placement="top"
+        data-content="К массовым мероприятиям относятся мероприятия из категорий
+        «Массовое мероприятие», «Туристический поезд»">
+          i
+        </span></td>
         <td>{{data.oplacheno_meropr|number_format(0, '.', ' ')}}</td>
       </tr>
       <tr>
@@ -440,11 +535,23 @@
       <h5>Статистика по услугам</h5>
       <table class="all_tables">
       <tr>
-        <td>Количество экскурсий, часов</td>
+        <td>Количество экскурсий, часов <span type="button" class="badge badge-success"
+        data-container="body" data-toggle="popover" data-placement="top"
+        data-content="К экскурсиям относятся мероприятия из категорий «Игровые
+        мероприятия», «Мастер-классы», «Один день из жизни деревни», «Солнцеворот»,
+        «Театральное представление», «Экологическая программа», «Экскурсионное
+        обслуживание»">
+          i
+        </span></td>
         <td>{{data.kolvo_ekskurs_long|number_format(0, '.', ' ')}}</td>
       </tr>
       <tr>
-        <td>Количество массовых мероприятий, штук</td>
+        <td>Количество массовых мероприятий, штук <span type="button" class="badge badge-success"
+        data-container="body" data-toggle="popover" data-placement="top"
+        data-content="К массовым мероприятиям относятся мероприятия из категорий
+        «Массовое мероприятие», «Туристический поезд»">
+          i
+        </span></td>
         <td>{{data.kolvo_meropr|number_format(0, '.', ' ')}}</td>
       </tr>
       <tr>

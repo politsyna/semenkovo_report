@@ -26,3 +26,10 @@ page_full:
     _controller: '\Drupal\report\Controller\PageFull::report'
   requirements:
     _permission: 'access report-form'
+
+page_vyborka:
+  path: 'report/vyborka/{start}/{end}'
+  defaults:
+    _controller: '\Drupal\report\Controller\PageVyborka::report'
+  requirements:
+    _permission: 'access report-form'

@@ -103,6 +103,35 @@ class DateChoice extends FormBase {
   }
 
   /**
+   * F ajaxModeDev.
+   */
+  public function ajaxDateChoice4(array &$form, &$form_state) {
+    $response = new AjaxResponse();
+    $uid = \Drupal::currentUser()->id();
+    $user = User::load($uid);
+    $date_from = $form_state->getValue('date_from');
+    $date_to = $form_state->getValue('date_to');
+    if ($user->hasPermission('access report-form')) {
+      if ($date_from && $date_to) {
+        if ($date_from < $date_to) {
+          $response->addCommand(new RedirectCommand('/report/vyborka/' . $date_from . '/' . $date_to));
+        }
+        else {
+          $response->addCommand(new HtmlCommand("#date-choice", "Начало отчетного
+          периода должно быть раньше его окончания."));
+        }
+      }
+      else {
+        $response->addCommand(new HtmlCommand("#date-choice", "Введите даты отчетного периода"));
+      }
+    }
+    else {
+      $response->addCommand(new HtmlCommand("#date-choice", "Доступ запрещен"));
+    }
+    return $response;
+  }
+
+  /**
    * Build the simple form.
    */
   public function buildForm(array $form, FormStateInterface $form_state, $extra = NULL) {
@@ -155,6 +184,16 @@ class DateChoice extends FormBase {
       '#attributes' => ['class' => ['btn', 'btn-xs', 'btn-info']],
       '#ajax' => [
         'callback' => '::ajaxDateChoice3',
+        'effect' => 'fade',
+        'progress' => ['type' => 'throbber', 'message' => ""],
+      ],
+    ];
+    $form['actions']['vyborka'] = [
+      '#type' => 'submit',
+      '#value' => 'Выборка',
+      '#attributes' => ['class' => ['btn', 'btn-xs', 'btn-danger']],
+      '#ajax' => [
+        'callback' => '::ajaxDateChoice4',
         'effect' => 'fade',
         'progress' => ['type' => 'throbber', 'message' => ""],
       ],

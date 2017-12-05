@@ -22,5 +22,9 @@ function report_theme() {
       'template' => 'rep-full',
       'variables' => ['data' => []],
     ],
+    'report-vyborka' => [
+      'template' => 'rep-vyborka',
+      'variables' => ['data' => []],
+    ],
   ];
 }
